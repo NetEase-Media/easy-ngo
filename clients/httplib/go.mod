@@ -3,6 +3,9 @@ module github.com/NetEase-Media/easy-ngo/clients/httplib
 go 1.18
 
 require (
+	github.com/NetEase-Media/easy-ngo/clients/xsentinel v0.0.0-20230208101755-f84181b2cdac
+	github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208101755-f84181b2cdac
+	github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208101755-f84181b2cdac
 	github.com/alibaba/sentinel-golang v1.0.4
 	github.com/djimenez/iconv-go v0.0.0-20160305225143-8960e66bd3da
 	github.com/prometheus/client_golang v1.9.0
