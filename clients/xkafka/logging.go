@@ -16,7 +16,7 @@ package xkafka
 
 import (
 	"github.com/NetEase-Media/easy-ngo/xlog"
-	"github.com/NetEase-Media/easy-ngoxfmt"
+	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 )
 
 func NewLogger() *logger {

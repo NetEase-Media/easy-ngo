@@ -18,8 +18,9 @@ import (
 	"fmt"
 	"sync"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/r/rms/api"
-	conf "github.com/NetEase-Media/easy-ngog"
 )
 
 var (

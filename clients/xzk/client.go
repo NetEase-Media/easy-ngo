@@ -18,7 +18,7 @@ import (
 	"sync"
 
 	// "github.com/NetEase-Media/easy-ngo/core/conf"
-	// tracer "github.com/NetEase-Media/easy-ngovability/tracing"
+	// tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
 
 	"github.com/go-zookeeper/zk"
 )

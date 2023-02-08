@@ -22,10 +22,10 @@ import (
 	"github.com/fatih/color"
 
 	"github.com/NetEase-Media/easy-ngo/application/healthz"
-	"github.com/NetEase-Media/easy-ngocation/hooks"
-	"github.com/NetEase-Media/easy-ngocation/signals"
-	"github.com/NetEase-Media/easy-ngocation/util"
-	"github.com/NetEase-Media/easy-ngocation/util/xgo"
+	"github.com/NetEase-Media/easy-ngo/application/hooks"
+	"github.com/NetEase-Media/easy-ngo/application/signals"
+	"github.com/NetEase-Media/easy-ngo/application/util"
+	"github.com/NetEase-Media/easy-ngo/application/util/xgo"
 )
 
 const (

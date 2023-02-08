@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	"github.com/NetEase-Media/easy-ngo
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/go-redis/redis/v8"
 )
 

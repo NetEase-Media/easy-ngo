@@ -21,9 +21,8 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngovability/tracing"
-	"github.com/NetEase-Media/easy-ngo
-
+	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/Shopify/sarama"
 	"github.com/prometheus/client_golang/prometheus"
 )

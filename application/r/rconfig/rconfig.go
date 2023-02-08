@@ -19,8 +19,9 @@ import (
 	"flag"
 	"testing"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
-	conf "github.com/NetEase-Media/easy-ngog"
 )
 
 var (

@@ -17,11 +17,12 @@ package rgorm
 import (
 	"context"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
-	"github.com/NetEase-Media/easy-ngocation/r/rmetrics"
-	"github.com/NetEase-Media/easy-ngots/xgorm"
-	conf "github.com/NetEase-Media/easy-ngog"
-	"github.com/NetEase-Media/easy-ngoxfmt"
+	"github.com/NetEase-Media/easy-ngo/application/r/rmetrics"
+	"github.com/NetEase-Media/easy-ngo/clients/xgorm"
+	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 )
 
 const (

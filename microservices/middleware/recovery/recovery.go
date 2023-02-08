@@ -18,8 +18,8 @@ import (
 	"context"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/errors"
-	"github.com/NetEase-Media/easy-ngoservices/middleware"
-	"github.com/NetEase-Media/easy-ngo
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 )
 
 // Handler is a function that handles a panic.

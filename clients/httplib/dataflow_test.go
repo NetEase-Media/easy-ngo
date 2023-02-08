@@ -27,7 +27,7 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/clients/xsentinel"
-	"github.com/NetEase-Media/easy-ngoxfmt"
+	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/alibaba/sentinel-golang/core/circuitbreaker"
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"

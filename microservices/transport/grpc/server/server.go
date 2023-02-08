@@ -23,9 +23,9 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/internal/xnet"
-	"github.com/NetEase-Media/easy-ngoservices/middleware"
-	"github.com/NetEase-Media/easy-ngoservices/sd"
-	"github.com/NetEase-Media/easy-ngoservices/transport"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
+	"github.com/NetEase-Media/easy-ngo/microservices/sd"
+	"github.com/NetEase-Media/easy-ngo/microservices/transport"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"

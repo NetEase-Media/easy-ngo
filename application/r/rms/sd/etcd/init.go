@@ -24,16 +24,15 @@ import (
 
 	"google.golang.org/grpc"
 
+	"github.com/NetEase-Media/easy-ngo/application/hooks"
 	"github.com/NetEase-Media/easy-ngo/application/r/rlog"
-	"github.com/NetEase-Media/easy-ngo
-
-	"github.com/NetEase-Media/easy-ngocation/hooks"
-	"github.com/NetEase-Media/easy-ngocation/r/rms"
-	"github.com/NetEase-Media/easy-ngocation/r/rms/api"
-	"github.com/NetEase-Media/easy-ngocation/r/rms/sd/internal"
-	"github.com/NetEase-Media/easy-ngoservices/contrib/sd/etcd"
-	"github.com/NetEase-Media/easy-ngoservices/sd"
-	"github.com/NetEase-Media/easy-ngoxfmt"
+	"github.com/NetEase-Media/easy-ngo/application/r/rms"
+	"github.com/NetEase-Media/easy-ngo/application/r/rms/api"
+	"github.com/NetEase-Media/easy-ngo/application/r/rms/sd/internal"
+	"github.com/NetEase-Media/easy-ngo/microservices/contrib/sd/etcd"
+	"github.com/NetEase-Media/easy-ngo/microservices/sd"
+	"github.com/NetEase-Media/easy-ngo/xlog"
+	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 

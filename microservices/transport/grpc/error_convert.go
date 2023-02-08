@@ -18,7 +18,7 @@ import (
 	goerr "errors"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/errors"
-	"github.com/NetEase-Media/easy-ngoservices/transport"
+	"github.com/NetEase-Media/easy-ngo/microservices/transport"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

@@ -20,9 +20,9 @@ import (
 
 	xgrpc "github.com/NetEase-Media/easy-ngo/microservices/transport/grpc"
 
-	"github.com/NetEase-Media/easy-ngoservices/internal/xrpc"
-	"github.com/NetEase-Media/easy-ngoservices/middleware"
-	"github.com/NetEase-Media/easy-ngoservices/transport"
+	"github.com/NetEase-Media/easy-ngo/microservices/internal/xrpc"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
+	"github.com/NetEase-Media/easy-ngo/microservices/transport"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )

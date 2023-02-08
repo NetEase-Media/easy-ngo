@@ -18,9 +18,9 @@ import (
 	"context"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/internal/xrpc"
-	"github.com/NetEase-Media/easy-ngoservices/middleware"
-	"github.com/NetEase-Media/easy-ngoservices/transport"
-	xgrpc "github.com/NetEase-Media/easy-ngoservices/transport/grpc"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
+	"github.com/NetEase-Media/easy-ngo/microservices/transport"
+	xgrpc "github.com/NetEase-Media/easy-ngo/microservices/transport/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"

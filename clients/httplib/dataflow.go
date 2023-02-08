@@ -26,9 +26,9 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/clients/xsentinel"
-	"github.com/NetEase-Media/easy-ngovability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngovability/tracing"
-	"github.com/NetEase-Media/easy-ngo
+	"github.com/NetEase-Media/easy-ngo/observability/metrics"
+	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/djimenez/iconv-go"
 	"github.com/valyala/fasthttp"

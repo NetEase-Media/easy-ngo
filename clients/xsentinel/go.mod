@@ -3,7 +3,7 @@ module github.com/NetEase-Media/easy-ngo/clients/xsentinel
 go 1.18
 
 require (
-	github.com/NetEase-Media/easy-ngo/xlog
+	github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220
 	github.com/alibaba/sentinel-golang v1.0.4
 	github.com/stretchr/testify v1.8.1
 )

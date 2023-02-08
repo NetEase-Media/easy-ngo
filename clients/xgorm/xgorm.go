@@ -18,8 +18,8 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngovability/tracing"
-	"github.com/NetEase-Media/easy-ngo
+	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

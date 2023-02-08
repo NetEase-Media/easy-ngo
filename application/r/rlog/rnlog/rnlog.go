@@ -3,11 +3,11 @@ package rlog
 import (
 	"context"
 
-	"github.com/NetEase-Media/easy-ngo/application/hooks"
-	"github.com/NetEase-Media/easy-ngocation/r/rlog"
-	conf "github.com/NetEase-Media/easy-ngog"
+	conf "github.com/NetEase-Media/easy-ngo/config"
 
-	"github.com/NetEase-Media/easy-ngonlog"
+	"github.com/NetEase-Media/easy-ngo/application/hooks"
+	"github.com/NetEase-Media/easy-ngo/application/r/rlog"
+	"github.com/NetEase-Media/easy-ngo/xlog/nlog"
 )
 
 const (

@@ -8,9 +8,9 @@ import (
 	"sync"
 
 	"github.com/NetEase-Media/easy-ngo/config/source"
-	"github.com/NetEase-Media/easy-ngog/source/env"
-	"github.com/NetEase-Media/easy-ngog/source/file"
-	"github.com/NetEase-Media/easy-ngog/source/parameter"
+	"github.com/NetEase-Media/easy-ngo/config/source/env"
+	"github.com/NetEase-Media/easy-ngo/config/source/file"
+	"github.com/NetEase-Media/easy-ngo/config/source/parameter"
 )
 
 type Config struct {

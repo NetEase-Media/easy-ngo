@@ -3,8 +3,8 @@ module github.com/NetEase-Media/easy-ngo/clients/xredis
 go 1.18
 
 require (
-	github.com/NetEase-Media/easy-ngo/observability
-	github.com/NetEase-Media/easy-ngo/xlog
+	github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220
+	github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220
 	github.com/alicebob/miniredis v2.5.0+incompatible
 	github.com/go-redis/redis/extra/rediscmd v0.2.0
 	github.com/go-redis/redis/v8 v8.11.5

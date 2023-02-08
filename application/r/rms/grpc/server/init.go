@@ -19,20 +19,19 @@ import (
 	"crypto/tls"
 	"fmt"
 
+	"github.com/NetEase-Media/easy-ngo/application/hooks"
 	"github.com/NetEase-Media/easy-ngo/application/r/rlog"
-	"github.com/NetEase-Media/easy-ngo
-
-	"github.com/NetEase-Media/easy-ngocation/hooks"
-	"github.com/NetEase-Media/easy-ngocation/r/rmetrics"
-	"github.com/NetEase-Media/easy-ngocation/r/rms"
-	"github.com/NetEase-Media/easy-ngocation/r/rms/api"
-	"github.com/NetEase-Media/easy-ngocation/r/rms/sd"
-	"github.com/NetEase-Media/easy-ngoservices/middleware"
-	"github.com/NetEase-Media/easy-ngoservices/middleware/metrics"
-	"github.com/NetEase-Media/easy-ngoservices/middleware/tracing"
-	"github.com/NetEase-Media/easy-ngoservices/transport/grpc/server"
-	tracer "github.com/NetEase-Media/easy-ngovability/tracing"
-	"github.com/NetEase-Media/easy-ngoxfmt"
+	"github.com/NetEase-Media/easy-ngo/application/r/rmetrics"
+	"github.com/NetEase-Media/easy-ngo/application/r/rms"
+	"github.com/NetEase-Media/easy-ngo/application/r/rms/api"
+	"github.com/NetEase-Media/easy-ngo/application/r/rms/sd"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware/metrics"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware/tracing"
+	"github.com/NetEase-Media/easy-ngo/microservices/transport/grpc/server"
+	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
+	"github.com/NetEase-Media/easy-ngo/xlog"
+	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 )
 
 var servers map[string]*server.Server

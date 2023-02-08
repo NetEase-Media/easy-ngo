@@ -17,9 +17,10 @@ package rxxljob
 import (
 	"context"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
-	"github.com/NetEase-Media/easy-ngots/xxxljob"
-	conf "github.com/NetEase-Media/easy-ngog"
+	"github.com/NetEase-Media/easy-ngo/clients/xxxljob"
 )
 
 const (

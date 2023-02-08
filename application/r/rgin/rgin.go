@@ -17,10 +17,11 @@ package rgin
 import (
 	"context"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
-	"github.com/NetEase-Media/easy-ngocation/r/rmetrics"
-	conf "github.com/NetEase-Media/easy-ngog"
-	"github.com/NetEase-Media/easy-ngors/xgin"
+	"github.com/NetEase-Media/easy-ngo/application/r/rmetrics"
+	"github.com/NetEase-Media/easy-ngo/servers/xgin"
 )
 
 var server *xgin.Server

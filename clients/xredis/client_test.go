@@ -21,10 +21,9 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/alicebob/miniredis"
 	"github.com/go-redis/redis/v8"
+	"github.com/stretchr/testify/assert"
 )
 
 type testClientWrapper struct {

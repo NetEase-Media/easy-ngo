@@ -17,10 +17,11 @@ package ragollo
 import (
 	"context"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
-	conf "github.com/NetEase-Media/easy-ngog"
-	"github.com/NetEase-Media/easy-ngog/contrib/xagollo"
-	"github.com/NetEase-Media/easy-ngog/source/file"
+	"github.com/NetEase-Media/easy-ngo/config/contrib/xagollo"
+	"github.com/NetEase-Media/easy-ngo/config/source/file"
 )
 
 func init() {

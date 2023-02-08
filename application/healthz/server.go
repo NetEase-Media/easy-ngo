@@ -20,9 +20,10 @@ import (
 	"net/http"
 	"sync"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
 	"github.com/NetEase-Media/easy-ngo/application/util"
-	conf "github.com/NetEase-Media/easy-ngo/config"
 )
 
 type HealthzServer struct {

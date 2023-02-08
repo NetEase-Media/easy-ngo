@@ -19,8 +19,8 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
-	"github.com/NetEase-Media/easy-ngoservices/sd"
-	"github.com/NetEase-Media/easy-ngo
+	"github.com/NetEase-Media/easy-ngo/microservices/sd"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"google.golang.org/grpc"
 )
 

@@ -17,9 +17,10 @@ package rotel
 import (
 	"context"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
-	conf "github.com/NetEase-Media/easy-ngog"
-	"github.com/NetEase-Media/easy-ngovability/contrib/xotel"
+	"github.com/NetEase-Media/easy-ngo/observability/contrib/xotel"
 )
 
 func init() {

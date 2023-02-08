@@ -16,7 +16,7 @@ package xprometheus
 
 import (
 	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	"github.com/NetEase-Media/easy-ngovability/metrics/lv"
+	"github.com/NetEase-Media/easy-ngo/observability/metrics/lv"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

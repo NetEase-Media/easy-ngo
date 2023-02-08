@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/config/contrib/xagollo/mockserver"
-	_ "github.com/NetEase-Media/easy-ngog/contrib/xagollo/mockserver"
+	_ "github.com/NetEase-Media/easy-ngo/config/contrib/xagollo/mockserver"
 	"github.com/stretchr/testify/assert"
 )
 

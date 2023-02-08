@@ -3,8 +3,8 @@ module github.com/NetEase-Media/easy-ngo/clients/xmemcache
 go 1.18
 
 require (
-	github.com/NetEase-Media/easy-ngo/observability
-	github.com/NetEase-Media/easy-ngo/xlog
+	github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220
+	github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220
 	github.com/bradfitz/gomemcache v0.0.0-20221031212613-62deef7fc822
 	github.com/stretchr/testify v1.8.1
 	go.opentelemetry.io/otel v1.11.2

@@ -23,8 +23,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
-	"github.com/NetEase-Media/easy-ngoservices/transport"
-	"github.com/NetEase-Media/easy-ngoservices/transport/grpc/client/resolver"
+	"github.com/NetEase-Media/easy-ngo/microservices/transport"
+	"github.com/NetEase-Media/easy-ngo/microservices/transport/grpc/client/resolver"
 	"google.golang.org/grpc"
 	_ "google.golang.org/grpc/health"
 )

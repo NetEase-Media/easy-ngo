@@ -19,12 +19,12 @@ import (
 	"strings"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/errors"
-	"github.com/NetEase-Media/easy-ngoservices/internal/xnet"
-	"github.com/NetEase-Media/easy-ngoservices/internal/xrpc"
-	"github.com/NetEase-Media/easy-ngoservices/middleware"
-	"github.com/NetEase-Media/easy-ngoservices/transport"
-	"github.com/NetEase-Media/easy-ngovability/tracing"
-	"github.com/NetEase-Media/easy-ngo
+	"github.com/NetEase-Media/easy-ngo/microservices/internal/xnet"
+	"github.com/NetEase-Media/easy-ngo/microservices/internal/xrpc"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
+	"github.com/NetEase-Media/easy-ngo/microservices/transport"
+	"github.com/NetEase-Media/easy-ngo/observability/tracing"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"

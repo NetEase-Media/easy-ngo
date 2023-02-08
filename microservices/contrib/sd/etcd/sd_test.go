@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/sd"
-	"github.com/NetEase-Media/easy-ngoxfmt"
+	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"google.golang.org/grpc"

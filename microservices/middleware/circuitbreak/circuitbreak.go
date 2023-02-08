@@ -18,10 +18,10 @@ import (
 	"context"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/transport"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 
-	"github.com/NetEase-Media/easy-ngoservices/errors"
-	"github.com/NetEase-Media/easy-ngoservices/middleware"
-	"github.com/NetEase-Media/easy-ngo
+	"github.com/NetEase-Media/easy-ngo/microservices/errors"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
 )
 
 // Option is a function that configures the middleware.

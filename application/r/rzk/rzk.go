@@ -17,9 +17,10 @@ package rzk
 import (
 	"context"
 
+	conf "github.com/NetEase-Media/easy-ngo/config"
+
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
-	"github.com/NetEase-Media/easy-ngots/xzk"
-	conf "github.com/NetEase-Media/easy-ngog"
+	"github.com/NetEase-Media/easy-ngo/clients/xzk"
 )
 
 const (

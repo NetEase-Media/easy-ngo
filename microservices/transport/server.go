@@ -18,7 +18,7 @@ import (
 	"context"
 
 	"github.com/NetEase-Media/easy-ngo/microservices/internal/xrpc"
-	"github.com/NetEase-Media/easy-ngoservices/middleware"
+	"github.com/NetEase-Media/easy-ngo/microservices/middleware"
 )
 
 var (

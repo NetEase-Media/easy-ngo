@@ -16,7 +16,7 @@ package xsentinel
 
 import (
 	"github.com/NetEase-Media/easy-ngo/xlog"
-	"github.com/NetEase-Media/easy-ngoxfmt"
+	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/alibaba/sentinel-golang/logging"
 )
 

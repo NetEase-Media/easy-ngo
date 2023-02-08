@@ -16,7 +16,7 @@ package sd
 
 import (
 	"github.com/NetEase-Media/easy-ngo/application/r/rms/sd/internal"
-	"github.com/NetEase-Media/easy-ngoservices/sd"
+	"github.com/NetEase-Media/easy-ngo/microservices/sd"
 )
 
 func GetRegistrar(name string) sd.Registrar {

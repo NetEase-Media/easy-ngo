@@ -16,8 +16,8 @@ package xredis
 
 import (
 	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngovability/tracing"
-	"github.com/NetEase-Media/easy-ngo
+	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/go-redis/redis/v8"
 )
 
