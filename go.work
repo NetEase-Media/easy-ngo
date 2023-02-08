@@ -1,0 +1,26 @@
+go 1.18
+
+use (
+	.
+	./application
+	./clients/httplib
+	./clients/xgorm
+	./clients/xkafka
+	./clients/xmemcache
+	./clients/xredis
+	./clients/xsentinel
+	./clients/xzk
+	./clients/xxxljob
+	./config
+	./config/contrib/xagollo
+	./config/contrib/xviper
+	./microservices
+	./microservices/contrib/circuitbreaker/gobreaker
+	./microservices/contrib/sd/etcd
+	./observability
+	./observability/contrib/xotel
+	./observability/contrib/xprometheus
+	./servers/xgin
+	./xlog
+	./xlog/contrib/xzap
+)

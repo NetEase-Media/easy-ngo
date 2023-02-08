@@ -1,0 +1,1 @@
+default.config.addr=./application_prod.toml;apollo://http://netease.com
