@@ -36,7 +36,7 @@ Go语言于2009年11月正式宣布推出，它是Google开发的一种静态强
 * 统一而完备的工具集
 ### easy-ngo介绍
 如果我们要开发一个应用，除了应用核心业务代码外，还需要很多的底层支持，可以参见如下图：
-![应用的依赖](https://github.com/NetEase-Media/easy-ngo-doc/tree/main/static/img/easy-ngo-1.png)
+![应用的依赖](https://netease-media.github.io/easy-ngo-website/assets/images/easy-ngo-1-366cb15746dd0d0d2e1dc2ffcb023845.png)
 
 在传媒技术团队中推广Go语言，亟需一个Web框架提供给业务开发同事使用，内含业务开发常用库，避免重复造轮子影响效率，并且需要无感知的自动监控数据上报，能在框架层面支持业务的优雅上下线，对云原生监控的支持，支持服务注册，服务发现，服务调用等能力，于是就孕育出easy-ngo框架。
 easy-ngo的主要目标如下：
@@ -49,7 +49,7 @@ easy-ngo的主要目标如下：
 * 能够方便的扩展第三方的SDK到框架中
 
 easy-ngo避免重复造轮子，所有模块都是在多个开源库中对比并挑选其一，然后增加部分必需功能，easy-ngo支持的能力如下图所示：
-![easy-ngo的能力](https://github.com/NetEase-Media/easy-ngo-doc/tree/main/static/img/easy-ngo-2.png)
+![easy-ngo的能力](https://netease-media.github.io/easy-ngo-website/assets/images/easy-ngo-2-705e4cec580d238bc19bb24b628aa539.png)
 
 easy-ngo框架为业务选择并包装了用到的中间件和基础服务，让业务可以快速的进入到业务开发的阶段，省去了研究和比较一些基础组件的时间，大大节省了业务的开发周期。
 
