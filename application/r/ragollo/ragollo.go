@@ -21,7 +21,6 @@ import (
 
 	"github.com/NetEase-Media/easy-ngo/application/hooks"
 	"github.com/NetEase-Media/easy-ngo/config/contrib/xagollo"
-	"github.com/NetEase-Media/easy-ngo/config/source/file"
 )
 
 func init() {
@@ -31,7 +30,5 @@ func init() {
 func Initialize(ctx context.Context) error {
 	ac := &xagollo.Xagollo{}
 	conf.Register(ac)
-	ds := &file.YamlFile{}
-	conf.Register(ds)
 	return nil
 }
