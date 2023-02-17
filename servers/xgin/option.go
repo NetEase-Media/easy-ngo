@@ -29,6 +29,7 @@ type Option struct {
 	EnableTracer   bool
 	ServiceAddress string
 	MetricsPath    string
+	TLS            *TLSOption
 
 	ShutdownTimeout time.Duration
 	Middlewares     *MiddlewaresOption
