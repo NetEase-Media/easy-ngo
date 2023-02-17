@@ -67,8 +67,8 @@ github.com/NetEase-Media/easy-ngo/observability/contrib/xotel v0.0.0-20230208101
 github.com/NetEase-Media/easy-ngo/observability/contrib/xotel v0.0.0-20230208101755-f84181b2cdac/go.mod h1:/e1NZKwKaIF+5AwYKew4EzN8a/hGLAZSFJHFVUuHvRs=
 github.com/NetEase-Media/easy-ngo/observability/contrib/xprometheus v0.0.0-20230208101755-f84181b2cdac h1:RzqG855NDD4jLcjaE87wCq3BKPVsBO9iowGh53x5BrQ=
 github.com/NetEase-Media/easy-ngo/observability/contrib/xprometheus v0.0.0-20230208101755-f84181b2cdac/go.mod h1:unDlZRZ73Iu1hzEpafSnl02IabKPZZUfOinqgehKRK4=
-github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230208101755-f84181b2cdac h1:Hstm6Leo/sIOPLasZVpjyEmQj+IQMIlWmSHUKMGTqJA=
-github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230208101755-f84181b2cdac/go.mod h1:0ESQGnFJE03p2UgtsCpdxwjFf0IObCGAQNugDZvHdng=
+github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230217025809-cc6ac801b1e8 h1:7iZqoSZJZHjTxN4L6Cw1jZPfO0RCeiwvv2tA+KKGuEA=
+github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230217025809-cc6ac801b1e8/go.mod h1:0ESQGnFJE03p2UgtsCpdxwjFf0IObCGAQNugDZvHdng=
 github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208101755-f84181b2cdac h1:mAgla+N8jj13/qe12A6d1C1pyXd3QxwyLFqnnruG1oA=
 github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208101755-f84181b2cdac/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
 github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap v0.0.0-20230208101755-f84181b2cdac h1:C/BwGylIvuokZvjMeTHNO9U/U0/WY0wYfXBc7+JT6gQ=
