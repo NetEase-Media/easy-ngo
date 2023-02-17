@@ -17,7 +17,7 @@ require (
 	github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208101755-f84181b2cdac
 	github.com/NetEase-Media/easy-ngo/observability/contrib/xotel v0.0.0-20230208101755-f84181b2cdac
 	github.com/NetEase-Media/easy-ngo/observability/contrib/xprometheus v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230208101755-f84181b2cdac
+	github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230217025809-cc6ac801b1e8
 	github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208101755-f84181b2cdac
 	github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap v0.0.0-20230208101755-f84181b2cdac
 	github.com/fatih/color v1.13.0
