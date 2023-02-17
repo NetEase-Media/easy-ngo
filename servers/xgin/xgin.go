@@ -55,8 +55,14 @@ func Default() *Server {
 func (server *Server) Serve() error {
 	server.Server = &http.Server{
 		Addr:    server.option.Address(),
-		Handler: server}
-	err := server.Server.Serve(server.listener)
+		Handler: server,
+	}
+	var err error
+	if server.option.TLS != nil && server.option.TLS.Enable {
+		err = server.Server.ServeTLS(server.listener, server.option.TLS.Cert, server.option.TLS.Key)
+	} else {
+		err = server.Server.Serve(server.listener)
+	}
 	if err == http.ErrServerClosed {
 		server.Logger.Panicf("close gin[%s]", err)
 		return nil
