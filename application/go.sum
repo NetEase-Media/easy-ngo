@@ -69,8 +69,10 @@ github.com/NetEase-Media/easy-ngo/observability/contrib/xprometheus v0.0.0-20230
 github.com/NetEase-Media/easy-ngo/observability/contrib/xprometheus v0.0.0-20230208101755-f84181b2cdac/go.mod h1:unDlZRZ73Iu1hzEpafSnl02IabKPZZUfOinqgehKRK4=
 github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230217025809-cc6ac801b1e8 h1:7iZqoSZJZHjTxN4L6Cw1jZPfO0RCeiwvv2tA+KKGuEA=
 github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230217025809-cc6ac801b1e8/go.mod h1:0ESQGnFJE03p2UgtsCpdxwjFf0IObCGAQNugDZvHdng=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208101755-f84181b2cdac h1:mAgla+N8jj13/qe12A6d1C1pyXd3QxwyLFqnnruG1oA=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208101755-f84181b2cdac/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
+github.com/NetEase-Media/easy-ngo/servers/xtcp v0.0.0-20230223032101-bc4964cf1a5c h1:SynXXcik5wrcqf40Cu418bxQWrnm1ZW9AzdnI3+dKjk=
+github.com/NetEase-Media/easy-ngo/servers/xtcp v0.0.0-20230223032101-bc4964cf1a5c/go.mod h1:Z/8ZzKdMxi/A5ZbLL3EJ7MUIidpRjFVRCd5Iju9snhE=
+github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230217033555-a8d2167008c1 h1:R1tFXO67EGtTGX/YTc2KKBstHlsW9vdkppCd+nyOUzk=
+github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230217033555-a8d2167008c1/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
 github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap v0.0.0-20230208101755-f84181b2cdac h1:C/BwGylIvuokZvjMeTHNO9U/U0/WY0wYfXBc7+JT6gQ=
 github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap v0.0.0-20230208101755-f84181b2cdac/go.mod h1:sSLvWxZvNxKAy63w7DXZVpoaPT6QajPzQBOA47GPQJw=
 github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWXgklEdEo=
