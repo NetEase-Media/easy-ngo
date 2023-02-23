@@ -21,6 +21,7 @@ use (
 	./observability/contrib/xotel
 	./observability/contrib/xprometheus
 	./servers/xgin
+	./servers/xtcp
 	./xlog
 	./xlog/contrib/xzap
 )

@@ -45,10 +45,14 @@ func defaultOption() *Option {
 	}
 }
 
+// Initial start listening
 func (server *Server) Initial() (err error) {
 	add := fmt.Sprintf("%s:%d", server.opt.IP, server.opt.Port)
 	listen, err := net.Listen("tcp", add)
 	if err != nil {
+		if server.logger != nil {
+			server.logger.Errorf("server %s listen error. msg:%s", server.opt.Name, err.Error())
+		}
 		return
 	}
 	server.listener = listen
@@ -59,6 +63,7 @@ func (server *Server) RegisterHandler(handler func(net.Conn, context.Context)) {
 	server.Handler = handler
 }
 
+// Listen prepare to handle events
 func (server *Server) Listen() error {
 	if server.Handler == nil {
 		if server.logger != nil {
@@ -75,7 +80,7 @@ func (server *Server) Listen() error {
 			}
 			continue // always listening
 		}
-		if server.logger.Level() == xlog.DebugLevel && server.logger != nil {
+		if server.logger != nil && server.logger.Level() == xlog.DebugLevel {
 			server.logger.Debugf("accept connetion, remote address %v", conn.RemoteAddr())
 		}
 		go server.Handler(conn, context.Background())
