@@ -33,7 +33,7 @@ func TcpServer() *xtcp.Server {
 }
 
 func init() {
-	hooks.Register(hooks.Initialize)
+	hooks.Register(hooks.Initialize, Initialize)
 	hooks.Register(hooks.Start, Start)
 }
 
