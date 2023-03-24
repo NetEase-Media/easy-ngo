@@ -3,24 +3,24 @@ module github.com/NetEase-Media/easy-ngo/application
 go 1.18
 
 require (
-	github.com/NetEase-Media/easy-ngo/clients/httplib v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/clients/xgorm v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/clients/xkafka v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/clients/xmemcache v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/clients/xredis v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/clients/xxxljob v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/clients/xzk v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/config v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/config/contrib/xagollo v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/microservices v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/microservices/contrib/sd/etcd v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/observability/contrib/xotel v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/observability/contrib/xprometheus v0.0.0-20230208101755-f84181b2cdac
-	github.com/NetEase-Media/easy-ngo/servers/xgin v0.0.0-20230217025809-cc6ac801b1e8
-	github.com/NetEase-Media/easy-ngo/servers/xtcp v0.0.0-20230223032101-bc4964cf1a5c
-	github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230217033555-a8d2167008c1
-	github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap v0.0.0-20230208101755-f84181b2cdac
+	github.com/NetEase-Media/easy-ngo/clients/httplib v1.0.0
+	github.com/NetEase-Media/easy-ngo/clients/xgorm v1.0.0
+	github.com/NetEase-Media/easy-ngo/clients/xkafka v1.0.0
+	github.com/NetEase-Media/easy-ngo/clients/xmemcache v1.0.0
+	github.com/NetEase-Media/easy-ngo/clients/xredis v1.0.0
+	github.com/NetEase-Media/easy-ngo/clients/xxxljob v1.0.0
+	github.com/NetEase-Media/easy-ngo/clients/xzk v1.0.0
+	github.com/NetEase-Media/easy-ngo/config v1.0.0
+	github.com/NetEase-Media/easy-ngo/config/contrib/xagollo v1.0.0
+	github.com/NetEase-Media/easy-ngo/microservices v1.0.0
+	github.com/NetEase-Media/easy-ngo/microservices/contrib/sd/etcd v1.0.0
+	github.com/NetEase-Media/easy-ngo/observability v1.0.0
+	github.com/NetEase-Media/easy-ngo/observability/contrib/xotel v1.0.0
+	github.com/NetEase-Media/easy-ngo/observability/contrib/xprometheus v1.0.0
+	github.com/NetEase-Media/easy-ngo/servers/xgin v1.0.0
+	github.com/NetEase-Media/easy-ngo/servers/xtcp v1.0.0
+	github.com/NetEase-Media/easy-ngo/xlog v1.0.0
+	github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap v1.0.0
 	github.com/fatih/color v1.13.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.1
@@ -32,7 +32,7 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/NetEase-Media/easy-ngo/clients/xsentinel v0.0.0-20230208101755-f84181b2cdac // indirect
+	github.com/NetEase-Media/easy-ngo/clients/xsentinel v1.0.0 // indirect
 	github.com/Shopify/sarama v1.37.2 // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/alibaba/sentinel-golang v1.0.4 // indirect

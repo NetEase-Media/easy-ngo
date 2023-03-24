@@ -3,7 +3,7 @@ module github.com/NetEase-Media/easy-ngo/observability/contrib/xotel
 go 1.18
 
 require (
-	github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220
+	github.com/NetEase-Media/easy-ngo/observability v1.0.0
 	go.opentelemetry.io/otel v1.11.2
 	go.opentelemetry.io/otel/exporters/jaeger v1.11.2
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.11.2

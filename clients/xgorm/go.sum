@@ -35,10 +35,10 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DATA-DOG/go-sqlmock v1.5.0 h1:Shsta01QNfFxHCfpW6YH2STWB0MudeXXEWMr20OEh60=
 github.com/DATA-DOG/go-sqlmock v1.5.0/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220 h1:KOm/0+0tTWSqdnrYG5dzdtXSEP/VfbUWkNeEuy3hDn4=
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220 h1:f4fBzd26JT7s1E0FJ3NW/8GGnDxp+LmqzhywauydggY=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0 h1:suhmT8wVwnu4XOUdj168gCUxD9IIVzuNfZHzujoFwVI=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0 h1:CNP4oVL91KztZpdDjtAfnyZUZ1E0nw2EtzYhqHvGnns=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
 github.com/agiledragon/gomonkey/v2 v2.9.0 h1:PDiKKybR596O6FHW+RVSG0Z7uGCBNbmbUXh3uCNQ7Hc=
 github.com/agiledragon/gomonkey/v2 v2.9.0/go.mod h1:ap1AmDzcVOAz1YpeJ3TCzIgstoaWLA6jbbgxfB4w2iY=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=

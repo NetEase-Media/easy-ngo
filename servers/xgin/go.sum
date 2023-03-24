@@ -35,8 +35,10 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220 h1:KOm/0+0tTWSqdnrYG5dzdtXSEP/VfbUWkNeEuy3hDn4=
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0 h1:suhmT8wVwnu4XOUdj168gCUxD9IIVzuNfZHzujoFwVI=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0 h1:CNP4oVL91KztZpdDjtAfnyZUZ1E0nw2EtzYhqHvGnns=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=

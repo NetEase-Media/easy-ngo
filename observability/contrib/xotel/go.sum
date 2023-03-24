@@ -1,5 +1,5 @@
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220 h1:KOm/0+0tTWSqdnrYG5dzdtXSEP/VfbUWkNeEuy3hDn4=
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0 h1:suhmT8wVwnu4XOUdj168gCUxD9IIVzuNfZHzujoFwVI=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/go-logr/logr v1.2.2/go.mod h1:jdQByPbusPIv2/zmleS9BjJVeZ6kBagPoEUsqbVz/1A=
 github.com/go-logr/logr v1.2.3 h1:2DntVwHkVopvECVRSlL5PSo9eG+cAkDCuckLubN+rq0=

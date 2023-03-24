@@ -1,8 +1,10 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220 h1:f4fBzd26JT7s1E0FJ3NW/8GGnDxp+LmqzhywauydggY=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
+github.com/NetEase-Media/easy-ngo/microservices v1.0.0 h1:SRqoh5q5EvVxn2p4qyww6Z2zdN41P0n+oqWUKw/h6Q4=
+github.com/NetEase-Media/easy-ngo/microservices v1.0.0/go.mod h1:CKolqqJ/3OsgIQRnKWWVY0pSv3A0V/sOZWNLSPwjyc4=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0 h1:CNP4oVL91KztZpdDjtAfnyZUZ1E0nw2EtzYhqHvGnns=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=

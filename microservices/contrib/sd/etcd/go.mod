@@ -3,7 +3,8 @@ module github.com/NetEase-Media/easy-ngo/microservices/contrib/sd/etcd
 go 1.18
 
 require (
-	github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220
+	github.com/NetEase-Media/easy-ngo/microservices v1.0.0
+	github.com/NetEase-Media/easy-ngo/xlog v1.0.0
 	github.com/stretchr/testify v1.8.1
 	go.etcd.io/etcd/client/v3 v3.5.6
 	google.golang.org/grpc v1.51.0

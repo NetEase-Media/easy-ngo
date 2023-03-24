@@ -1,7 +1,7 @@
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220 h1:KOm/0+0tTWSqdnrYG5dzdtXSEP/VfbUWkNeEuy3hDn4=
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220 h1:f4fBzd26JT7s1E0FJ3NW/8GGnDxp+LmqzhywauydggY=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0 h1:suhmT8wVwnu4XOUdj168gCUxD9IIVzuNfZHzujoFwVI=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0 h1:CNP4oVL91KztZpdDjtAfnyZUZ1E0nw2EtzYhqHvGnns=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
 github.com/bradfitz/gomemcache v0.0.0-20221031212613-62deef7fc822 h1:hjXJeBcAMS1WGENGqDpzvmgS43oECTx8UXq31UBu0Jw=
 github.com/bradfitz/gomemcache v0.0.0-20221031212613-62deef7fc822/go.mod h1:H0wQNHz2YrLsuXOZozoeDmnHXkNCRmMW0gwFWDfEZDA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

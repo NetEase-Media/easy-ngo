@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
-	github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220
-	github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220
+	github.com/NetEase-Media/easy-ngo/observability v1.0.0
+	github.com/NetEase-Media/easy-ngo/xlog v1.0.0
 	github.com/agiledragon/gomonkey/v2 v2.9.0
 	github.com/prometheus/client_golang v1.14.0
 	github.com/stretchr/testify v1.8.1

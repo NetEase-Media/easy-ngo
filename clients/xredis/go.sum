@@ -1,7 +1,7 @@
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220 h1:KOm/0+0tTWSqdnrYG5dzdtXSEP/VfbUWkNeEuy3hDn4=
-github.com/NetEase-Media/easy-ngo/observability v0.0.0-20230208060752-d8027e910220/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220 h1:f4fBzd26JT7s1E0FJ3NW/8GGnDxp+LmqzhywauydggY=
-github.com/NetEase-Media/easy-ngo/xlog v0.0.0-20230208060752-d8027e910220/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0 h1:suhmT8wVwnu4XOUdj168gCUxD9IIVzuNfZHzujoFwVI=
+github.com/NetEase-Media/easy-ngo/observability v1.0.0/go.mod h1:ISEWew7ggEuhvPVwOxPGAnIyTD/UaoB74zm8KAZjkF0=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0 h1:CNP4oVL91KztZpdDjtAfnyZUZ1E0nw2EtzYhqHvGnns=
+github.com/NetEase-Media/easy-ngo/xlog v1.0.0/go.mod h1:ya16VefBK0CUcjSkxRDWMDRVWe3ld6QJF4lXmZp/A78=
 github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a h1:HbKu58rmZpUGpz5+4FfNmIU+FmZg2P3Xaj2v2bfNWmk=
 github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a/go.mod h1:SGnFV6hVsYE877CKEZ6tDNTjaSXYUk6QqoIK6PrAtcc=
 github.com/alicebob/miniredis v2.5.0+incompatible h1:yBHoLpsyjupjz3NL3MhKMVkR41j82Yjf3KFv7ApYzUI=
