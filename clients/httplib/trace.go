@@ -24,18 +24,18 @@ import (
 )
 
 type FastHeaderCarrier struct {
-	fasthttp.RequestHeader
+	*fasthttp.Request
 	kvs  map[string]string
 	keys []string
 }
 
-func NewFastHeaderCarrier(rh fasthttp.RequestHeader) *FastHeaderCarrier {
+func NewFastHeaderCarrier(req *fasthttp.Request) *FastHeaderCarrier {
 	fhc := &FastHeaderCarrier{
-		RequestHeader: rh,
-		kvs:           make(map[string]string, rh.Len()),
-		keys:          make([]string, rh.Len()),
+		Request: req,
+		kvs:     make(map[string]string, req.Header.Len()),
+		keys:    make([]string, req.Header.Len()),
 	}
-	rh.VisitAll(func(key, value []byte) {
+	req.Header.VisitAll(func(key, value []byte) {
 		fhc.kvs[string(key)] = string(value)
 		fhc.keys = append(fhc.keys, string(key))
 	})
@@ -47,7 +47,7 @@ func (fhc FastHeaderCarrier) Get(key string) string {
 }
 
 func (fhc FastHeaderCarrier) Set(key string, value string) {
-	fhc.RequestHeader.Set(key, value)
+	fhc.Request.Header.Set(key, value)
 }
 
 func (fhc FastHeaderCarrier) Keys() []string {
@@ -65,8 +65,6 @@ func tracingDoFuc(f DoFunc) DoFunc {
 		tr := tracer.GetTracer("httplib")
 
 		propagator := tracer.GetTextMapPropagator()
-		//spc := tracer.SpanContextFromContext(ctx)
-		//df.logger.Infof("issampled:%s,isvalid:%s,isremote:%s", spc.IsSampled(), spc.IsValid(), spc.IsRemote())
 		newCtx, span := tr.Start(ctx, "httpclient", tracer.WithSpanKind(tracer.SpanKindClient))
 		df.logger.Debugf("newCtx:%+v,span type:%s, spanCtx:%s", newCtx, reflect.TypeOf(span), span.SpanContext().IsSampled())
 		span.SetAttributes(
@@ -74,7 +72,7 @@ func tracingDoFuc(f DoFunc) DoFunc {
 			semconv.HTTPMethodKey.String(string(df.req.Header.Method())),
 			semconv.HTTPHostKey.String(string(df.req.Host())),
 		)
-		propagator.Inject(newCtx, NewFastHeaderCarrier(df.req.Header))
+		propagator.Inject(newCtx, NewFastHeaderCarrier(df.req))
 
 		statusCode, err := f(df, ctx)
 
