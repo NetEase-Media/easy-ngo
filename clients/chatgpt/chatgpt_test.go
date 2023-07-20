@@ -6,7 +6,7 @@ import (
 )
 
 func TestChat(t *testing.T) {
-	chatgpt := &ChatGPT{"sk-xxxx"}
+	chatgpt := &ChatGPT{"sk-xxxxx"}
 	res, err := chatgpt.Chat("What's your name?")
 	if err != nil {
 		t.Fatal(err)
