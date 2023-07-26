@@ -20,8 +20,9 @@ use (
 	./observability
 	./observability/contrib/xotel
 	./observability/contrib/xprometheus
-	./servers/xgin
-	./servers/xtcp
+	./server/xgin
+	./server/xtcp
+	./server/xecho
 	./xlog
 	./xlog/contrib/xzap
 )
