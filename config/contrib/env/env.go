@@ -24,13 +24,10 @@ func (e *EnvConfigSource) Init(protocol string, config *config.Config) error {
 	for _, kv := range kvs {
 		if strings.HasPrefix(kv, "prefix=") {
 			e.envPrefix = strings.TrimPrefix(kv, "prefix=")
-		} else if strings.HasPrefix(kv, "envName=") {
-			e.bindEnv = strings.Split(strings.TrimPrefix(kv, "envName="), ",")
 		}
 	}
 	config.Viper.AutomaticEnv()
 	config.Viper.SetEnvPrefix(e.envPrefix)
-	config.Viper.BindEnv(e.bindEnv...)
 	return nil
 }
 
