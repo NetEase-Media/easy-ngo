@@ -12,8 +12,6 @@ use (
 	./clients/xzk
 	./clients/xxxljob
 	./config
-	./config/contrib/xagollo
-	./config/contrib/xviper
 	./microservices
 	./microservices/contrib/circuitbreaker/gobreaker
 	./microservices/contrib/sd/etcd
