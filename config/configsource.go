@@ -5,8 +5,8 @@ var (
 )
 
 type ConfigSource interface {
-	Read(config *Config) error
-	Init(protocol string, config *Config) error
+	Read() error
+	Init(protocol string) error
 }
 
 func Register(scheme string, creator ConfigSource) {
