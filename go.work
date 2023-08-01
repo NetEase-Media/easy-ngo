@@ -11,6 +11,7 @@ use (
 	./clients/xsentinel
 	./clients/xzk
 	./clients/xxxljob
+	./clients/xgoroutinepool
 	./config
 	./config/contrib/xagollo
 	./config/contrib/xviper
