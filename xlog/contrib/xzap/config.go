@@ -1,4 +1,4 @@
-package xlog
+package xzap
 
 type FORMAT string
 type LEVEL string
@@ -39,6 +39,13 @@ type Config struct {
 	WritableCaller bool   // 是否输出调用者信息
 	WritableStack  bool   // 是否输出堆栈信息
 	AddCallerSkip  int    // 跳过堆栈信息层数
+	TimeKey        string
+	LevelKey       string
+	NameKey        string
+	CallerKey      string
+	FunctionKey    string
+	MessageKey     string
+	StacktraceKey  string
 }
 
 func DefaultConfig() *Config {
@@ -59,5 +66,12 @@ func DefaultConfig() *Config {
 		WritableCaller: true,
 		WritableStack:  false,
 		AddCallerSkip:  1,
+		TimeKey:        "time",
+		LevelKey:       "level",
+		NameKey:        "logger",
+		CallerKey:      "file",
+		FunctionKey:    "func",
+		MessageKey:     "msg",
+		StacktraceKey:  "stack",
 	}
 }
