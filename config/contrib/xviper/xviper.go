@@ -1,58 +1,83 @@
-// Copyright 2022 NetEase Media Technology（Beijing）Co., Ltd.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// 	http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package xviper
 
 import (
+	"strings"
+	"time"
+
 	"github.com/spf13/viper"
 )
 
-type Xviper struct {
-	*viper.Viper
+type XViper struct {
+	viper *viper.Viper
 }
 
-func New() *Xviper {
-	return &Xviper{
-		Viper: viper.New(),
+func New() *XViper {
+	return &XViper{
+		viper: viper.New(),
 	}
 }
 
-func (vip *Xviper) Load(sourcePathes []string) (map[string]interface{}, error) {
-	if len(sourcePathes) == 0 {
-		return nil, nil
+func (xviper *XViper) Init(protocol string) error {
+	scheme := protocol[:strings.Index(protocol, "://")]
+	switch scheme {
+	case "env":
+		initEnv(protocol[strings.Index(protocol, "://")+3:])
+	case "file":
+		initFile(protocol[strings.Index(protocol, "://")+3:])
 	}
-	for _, v := range sourcePathes {
-		tvip := &Xviper{
-			Viper: viper.New(),
+	return nil
+}
+
+func initEnv(protocol string) {
+	kvs := strings.Split(protocol, ";")
+	for _, kv := range kvs {
+		if strings.HasPrefix(kv, "prefix=") {
+			xviper.viper.SetEnvPrefix(strings.TrimPrefix(kv, "prefix="))
 		}
-		m, err := tvip.load(v)
-		if err != nil {
-			return nil, err
-		}
-		vip.MergeConfigMap(m)
 	}
-	M := vip.AllSettings()
-	return M, nil
+	xviper.viper.AutomaticEnv()
 }
 
-func (vip *Xviper) load(sourcePath string) (map[string]interface{}, error) {
-	if len(sourcePath) == 0 {
-		return nil, nil
+func initFile(protocol string) {
+	kvs := strings.Split(protocol, ";")
+	for _, kv := range kvs {
+		if strings.HasPrefix(kv, "name=") {
+			xviper.viper.SetConfigName(strings.TrimPrefix(kv, "name="))
+		} else if strings.HasPrefix(kv, "type=") {
+			xviper.viper.SetConfigType(strings.TrimPrefix(kv, "type="))
+		} else if strings.HasPrefix(kv, "path=") {
+			paths := strings.Split(strings.TrimPrefix(kv, "path="), ",")
+			for _, path := range paths {
+				xviper.viper.AddConfigPath(path)
+			}
+		}
 	}
-	vip.SetConfigFile(sourcePath)
-	vip.ReadInConfig()
-	// M := make(map[string]interface{})
-	M := vip.AllSettings()
-	return M, nil
+}
+
+func (xviper *XViper) Read() error {
+	return xviper.viper.ReadInConfig()
+}
+
+func (xviper *XViper) GetString(key string) string {
+	return xviper.viper.GetString(key)
+}
+
+func (xviper *XViper) UnmarshalKey(key string, rawVal interface{}) error {
+	return xviper.viper.UnmarshalKey(key, rawVal)
+}
+
+func (xviper *XViper) GetInt(key string) int {
+	return xviper.viper.GetInt(key)
+}
+
+func (xviper *XViper) GetBool(key string) bool {
+	return xviper.viper.GetBool(key)
+}
+
+func (xviper *XViper) GetTime(key string) time.Time {
+	return xviper.viper.GetTime(key)
+}
+
+func (xviper *XViper) GetFloat64(key string) float64 {
+	return xviper.viper.GetFloat64(key)
 }
