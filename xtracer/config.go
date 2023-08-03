@@ -21,7 +21,7 @@ type Config struct {
 
 func DefaultConfig() *Config {
 	return &Config{
-		SampleRate:   100,
+		SampleRate:   1,
 		ExporterName: EXPORTER_NAME_STDOUT,
 	}
 }
