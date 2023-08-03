@@ -19,7 +19,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/NetEase-Media/easy-ngo/server"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,12 +30,11 @@ type Server struct {
 	listener net.Listener
 }
 
-func New(config *Config) *server.Server {
-	server := &Server{
+func New(config *Config) *Server {
+	return &Server{
 		config: config,
 		Engine: gin.New(),
 	}
-	return server
 }
 
 func (server *Server) Serve() error {
@@ -43,10 +42,9 @@ func (server *Server) Serve() error {
 		Addr:    server.Address(),
 		Handler: server,
 	}
-	var err error
-	err = server.Server.Serve(server.listener)
+	err := server.Server.Serve(server.listener)
 	if err == http.ErrServerClosed {
-		xlog.Panicf("gin server closed")
+		xlog.Panicf("gin server closed,%v", err)
 		return nil
 	}
 	return nil

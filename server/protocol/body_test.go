@@ -12,37 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package xtcp
+package protocol
 
 import (
-	"context"
-	"fmt"
-	"net"
+	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestServer(t *testing.T) {
-	opt := Option{
-		Name: "server01",
-		IP:   "0.0.0.0",
-		Port: 8888,
-	}
-
-	server := New(&opt)
-	err := server.Initial()
-	if err != nil {
-		fmt.Printf("%s", err.Error())
-		return
-	}
-	server.RegisterHandler(func(con net.Conn, ctx context.Context) {
-		var buf []byte = make([]byte, 1024)
-		for {
-			_, err := con.Read(buf)
-			if err != nil {
-				return
-			}
-			fmt.Print(string(buf))
-		}
-	})
-	server.Listen()
+func TestSuccess(t *testing.T) {
+	var data = "aaa"
+	statusCode, body := Success(data)
+	assert.Equal(t, http.StatusOK, statusCode)
+	assert.Equal(t, data, body.Data)
+	assert.Nil(t, body.GetError())
 }
