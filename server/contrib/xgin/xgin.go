@@ -18,7 +18,9 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"time"
 
+	"github.com/NetEase-Media/easy-ngo/server"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,6 +29,8 @@ type Server struct {
 	*http.Server
 	config   *Config
 	listener net.Listener
+
+	httpMetrics *server.HttpMetrics
 }
 
 func New(config *Config) *Server {
@@ -44,20 +48,39 @@ func (server *Server) Serve() error {
 	return server.Server.Serve(server.listener)
 }
 
-func (server *Server) Init() error {
-	if server.config.EnabledMetric {
-		server.initMetrics()
-		server.Use(server.metricsMiddleware())
+func (s *Server) Init() error {
+	if s.config.EnabledMetric {
+		s.httpMetrics = server.NewHttpMetrics()
+		s.httpMetrics.Init()
+		s.Use(s.metricsMiddleware())
 	}
-	if server.config.EnabledTrace {
+	if s.config.EnabledTrace {
+		s.Use(s.traceMiddleware())
 	}
-	listener, err := net.Listen("tcp", server.Address())
+	listener, err := net.Listen("tcp", s.Address())
 	if err != nil {
 		return err
 	}
-	server.listener = listener
-	gin.SetMode(string(server.config.Mode))
+	s.listener = listener
+	gin.SetMode(string(s.config.Mode))
 	return nil
+}
+
+func (s *Server) metricsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if s.config.MetricsPath == c.Request.URL.Path {
+			c.Next()
+			return
+		}
+		start := time.Now()
+		c.Next()
+		s.httpMetrics.Record((time.Now().Nanosecond()-start.Nanosecond())/1e6, server.HttpLabels{
+			Url:    c.Request.URL.Path,
+			Method: c.Request.Method,
+			Code:   c.Writer.Status(),
+			Domain: c.Request.Host,
+		})
+	}
 }
 
 func (server *Server) Shutdown() error {
