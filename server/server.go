@@ -4,4 +4,5 @@ type Server interface {
 	Serve() error
 	Shutdown() error
 	Healthz() bool
+	Init() error
 }

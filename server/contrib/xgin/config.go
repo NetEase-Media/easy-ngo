@@ -1,11 +1,20 @@
 package xgin
 
+type MODE string
+
+const (
+	DEBUG   MODE = "debug"
+	RELEASE      = "release"
+	TEST         = "test"
+)
+
 type Config struct {
 	Host          string
 	Port          int
 	EnabledMetric bool
-	EnabledTracer bool
+	EnabledTrace  bool
 	MetricsPath   string
+	Mode          MODE
 }
 
 func DefaultConfig() *Config {
@@ -13,7 +22,8 @@ func DefaultConfig() *Config {
 		Host:          "0.0.0.0",
 		Port:          8080,
 		EnabledMetric: true,
-		EnabledTracer: false,
+		EnabledTrace:  false,
 		MetricsPath:   "/metrics",
+		Mode:          DEBUG,
 	}
 }

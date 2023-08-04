@@ -19,7 +19,6 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/gin-gonic/gin"
 )
 
@@ -42,11 +41,22 @@ func (server *Server) Serve() error {
 		Addr:    server.Address(),
 		Handler: server,
 	}
-	err := server.Server.Serve(server.listener)
-	if err == http.ErrServerClosed {
-		xlog.Panicf("gin server closed,%v", err)
-		return nil
+	return server.Server.Serve(server.listener)
+}
+
+func (server *Server) Init() error {
+	if server.config.EnabledMetric {
+		server.initMetrics()
+		server.Use(server.metricsMiddleware())
 	}
+	if server.config.EnabledTrace {
+	}
+	listener, err := net.Listen("tcp", server.Address())
+	if err != nil {
+		return err
+	}
+	server.listener = listener
+	gin.SetMode(string(server.config.Mode))
 	return nil
 }
 
