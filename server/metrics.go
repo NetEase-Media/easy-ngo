@@ -45,6 +45,6 @@ func NewHttpMetrics() *HttpMetrics {
 
 func (httpMetrics *HttpMetrics) Init() {
 	// bukets := prometheus.ExponentialBuckets(10, 10, 5)
-	requestTotal = xmetrics.NewCounter(metricRequestTotal, "url", "method", "code")
+	// requestTotal = xmetrics.NewCounter(metricRequestTotal, "url", "method", "code")
 	// requestDuration = xmetrics.NewHistogram(metricRequestDuration, bukets, "url", "method", "code")
 }
