@@ -23,6 +23,4 @@ use (
 	./observability/contrib/xprometheus
 	./servers/xgin
 	./servers/xtcp
-	./xlog
-	./xlog/contrib/xzap
 )
