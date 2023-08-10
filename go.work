@@ -11,9 +11,7 @@ use (
 	./clients/xsentinel
 	./clients/xzk
 	./clients/xxxljob
-	./config
-	./config/contrib/xagollo
-	./config/contrib/xviper
+	./clients/xgoroutinepool
 	./microservices
 	./microservices/contrib/circuitbreaker/gobreaker
 	./microservices/contrib/sd/etcd
@@ -22,6 +20,4 @@ use (
 	./observability/contrib/xprometheus
 	./servers/xgin
 	./servers/xtcp
-	./xlog
-	./xlog/contrib/xzap
 )
