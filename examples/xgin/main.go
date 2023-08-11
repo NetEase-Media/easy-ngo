@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/NetEase-Media/easy-ngo/config"
 	"github.com/NetEase-Media/easy-ngo/server"
 	"github.com/NetEase-Media/easy-ngo/server/contrib/xgin"
 	"github.com/gin-gonic/gin"
@@ -9,9 +10,15 @@ import (
 var s server.Server
 
 func main() {
-	s = xgin.New(xgin.DefaultConfig())
+	c := config.New()
+	c.AddProtocol("file://type=yaml;path=./;name=app")
+	c.Init()
+	c.ReadConfig()
+	config := xgin.DefaultConfig()
+	c.UnmarshalKey("server", config)
+	s = xgin.New(config)
 	s.GET("/test", func(ctx *gin.Context) {
-		ctx.String(200, "hello world")
+		ctx.JSON(200, "ddd")
 	})
 	s.Init()
 	s.Serve()

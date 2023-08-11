@@ -64,17 +64,17 @@ func (s *Server) Init() error {
 		case server.GET:
 			s.Engine.GET(route.RelativePath, s.handlerWrapper(route.Handler))
 		case server.POST:
-			s.Engine.POST(route.RelativePath, route.Handler.(gin.HandlerFunc))
+			s.Engine.POST(route.RelativePath, s.handlerWrapper(route.Handler))
 		case server.PUT:
-			s.Engine.PUT(route.RelativePath, route.Handler.(gin.HandlerFunc))
+			s.Engine.PUT(route.RelativePath, s.handlerWrapper(route.Handler))
 		case server.DELETE:
-			s.Engine.DELETE(route.RelativePath, route.Handler.(gin.HandlerFunc))
+			s.Engine.DELETE(route.RelativePath, s.handlerWrapper(route.Handler))
 		case server.PATCH:
-			s.Engine.PATCH(route.RelativePath, route.Handler.(gin.HandlerFunc))
+			s.Engine.PATCH(route.RelativePath, s.handlerWrapper(route.Handler))
 		case server.HEAD:
-			s.Engine.HEAD(route.RelativePath, route.Handler.(gin.HandlerFunc))
+			s.Engine.HEAD(route.RelativePath, s.handlerWrapper(route.Handler))
 		case server.OPTIONS:
-			s.Engine.OPTIONS(route.RelativePath, route.Handler.(gin.HandlerFunc))
+			s.Engine.OPTIONS(route.RelativePath, s.handlerWrapper(route.Handler))
 		}
 	}
 	listener, err := net.Listen("tcp", s.Address())
