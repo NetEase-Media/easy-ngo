@@ -20,7 +20,7 @@ func DefaultConfig() *Config {
 	return &Config{
 		Host:          "0.0.0.0",
 		Port:          8080,
-		EnabledMetric: true,
+		EnabledMetric: false,
 		EnabledTrace:  false,
 		Mode:          DEBUG,
 	}

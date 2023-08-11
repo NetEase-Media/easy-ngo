@@ -31,12 +31,14 @@ type Server struct {
 	listener net.Listener
 
 	httpMetrics *server.HttpMetrics
+	routes      []*server.Route
 }
 
 func New(config *Config) *Server {
 	return &Server{
 		config: config,
 		Engine: gin.New(),
+		routes: make([]*server.Route, 0),
 	}
 }
 
@@ -57,6 +59,24 @@ func (s *Server) Init() error {
 	if s.config.EnabledTrace {
 		s.Use(s.traceMiddleware())
 	}
+	for _, route := range s.routes {
+		switch route.Method {
+		case server.GET:
+			s.Engine.GET(route.RelativePath, s.handlerWrapper(route.Handler))
+		case server.POST:
+			s.Engine.POST(route.RelativePath, route.Handler.(gin.HandlerFunc))
+		case server.PUT:
+			s.Engine.PUT(route.RelativePath, route.Handler.(gin.HandlerFunc))
+		case server.DELETE:
+			s.Engine.DELETE(route.RelativePath, route.Handler.(gin.HandlerFunc))
+		case server.PATCH:
+			s.Engine.PATCH(route.RelativePath, route.Handler.(gin.HandlerFunc))
+		case server.HEAD:
+			s.Engine.HEAD(route.RelativePath, route.Handler.(gin.HandlerFunc))
+		case server.OPTIONS:
+			s.Engine.OPTIONS(route.RelativePath, route.Handler.(gin.HandlerFunc))
+		}
+	}
 	listener, err := net.Listen("tcp", s.Address())
 	if err != nil {
 		return err
@@ -68,10 +88,10 @@ func (s *Server) Init() error {
 
 func (s *Server) metricsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if s.config.MetricsPath == c.Request.URL.Path {
-			c.Next()
-			return
-		}
+		// if s.config.MetricsPath == c.Request.URL.Path {
+		// 	c.Next()
+		// 	return
+		// }
 		start := time.Now()
 		c.Next()
 		s.httpMetrics.Record((time.Now().Nanosecond()-start.Nanosecond())/1e6, server.HttpLabels{
@@ -93,4 +113,46 @@ func (server *Server) Healthz() bool {
 
 func (server *Server) Address() string {
 	return fmt.Sprintf("%s:%d", server.config.Host, server.config.Port)
+}
+
+func (s *Server) PUT(relativePath string, handler any) {
+	s.appendRoute(server.PUT, relativePath, handler)
+}
+
+func (s *Server) GET(relativePath string, handler any) {
+	s.appendRoute(server.GET, relativePath, handler)
+}
+
+func (s *Server) POST(relativePath string, handler any) {
+	s.appendRoute(server.POST, relativePath, handler)
+}
+
+func (s *Server) DELETE(relativePath string, handler any) {
+	s.appendRoute(server.POST, relativePath, handler)
+}
+
+func (s *Server) PATCH(relativePath string, handler any) {
+	s.appendRoute(server.POST, relativePath, handler)
+}
+
+func (s *Server) HEAD(relativePath string, handler any) {
+	s.appendRoute(server.POST, relativePath, handler)
+}
+
+func (s *Server) OPTIONS(relativePath string, handler any) {
+	s.appendRoute(server.POST, relativePath, handler)
+}
+
+func (s *Server) appendRoute(method server.METHOD, relativePath string, handler any) {
+	s.routes = append(s.routes, &server.Route{
+		Method:       method,
+		RelativePath: relativePath,
+		Handler:      handler,
+	})
+}
+
+func (s *Server) handlerWrapper(handler any) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		handler.(func(c *gin.Context))(c)
+	}
 }
