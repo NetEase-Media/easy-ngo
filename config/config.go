@@ -5,12 +5,7 @@ import (
 	"time"
 )
 
-var (
-// vendor Properties
-)
-
 type Config struct {
-	//key: scheme, value: url
 	protocols map[string]string
 }
 
