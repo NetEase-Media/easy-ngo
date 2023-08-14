@@ -114,4 +114,4 @@ https://github.com/NetEase-Media/easy-ngo-examples
 
 ## 微信交流群
 欢迎大家扫描二维码加入我们
-![微信群]("https://netease-media.github.io/easy-ngo-website/assets/images/Wechateasyngo-831ca415728ad8d9f70d6984e29979a5.jpeg")
+![微信群](https://github.com/NetEase-Media/easy-ngo-website/blob/gh-pages/images/Wechateasyngo.jpeg)
