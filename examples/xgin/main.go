@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/NetEase-Media/easy-ngo/app"
 
+	_ "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xgin"
 	_ "github.com/NetEase-Media/easy-ngo/config/contrib/xviper"
 )
 

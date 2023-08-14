@@ -4,3 +4,5 @@ server:
 metrics:
   path: /metrics
   port: 8888
+logger:
+  format: text

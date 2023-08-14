@@ -1,6 +1,7 @@
 package config
 
 import (
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -26,15 +27,29 @@ func (c *Config) Init() error {
 }
 
 func (c *Config) AddProtocol(protocol string) *Config {
+	//如果没有找到://，则默认为file://，文件类型为yaml
+	if !strings.Contains(protocol, "://") {
+		//从后往前截取.号，.前面为文件路径和文件名，后面为文件类型
+		fileNameAndExt := strings.Split(protocol, ".")
+		dir, file := filepath.Split(fileNameAndExt[0])
+		//从后往前截取第一个/，前面为路径，后面为文件名
+		protocol = "path=" + dir + ";name=" + file
+		if len(fileNameAndExt) == 2 {
+			protocol = protocol + ";type=" + fileNameAndExt[1]
+		}
+		protocol = "file://" + protocol
+	}
 	c.protocols[strings.Split(protocol, "://")[0]] = protocol
 	return c
 }
 
 func (c *Config) ReadConfig() error {
 	for scheme, _ := range c.protocols {
-		err := vendors[scheme].Read()
-		if err != nil {
-			return err
+		if "file" == scheme {
+			err := vendors[scheme].Read()
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

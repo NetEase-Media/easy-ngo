@@ -24,6 +24,10 @@ func GetFloat64(key string) float64 {
 	return config.GetFloat64(key)
 }
 
-func UnmarshalKey(key string, rawVal interface{}) {
-	config.UnmarshalKey(key, &rawVal)
+func UnmarshalKey(key string, rawVal interface{}) error {
+	return config.UnmarshalKey(key, &rawVal)
+}
+
+func WithConfig(c *Config) {
+	config = c
 }
