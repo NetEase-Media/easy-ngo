@@ -1,6 +1,6 @@
 server:
-  port: 8080
-  enabledMetric: true
+  port: 8888
+  enabledMetric: false
 metrics:
   path: /metrics
   port: 8888

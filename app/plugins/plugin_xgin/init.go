@@ -15,13 +15,13 @@ func init() {
 
 func Initialize(ctx context.Context) error {
 	c := xgin.DefaultConfig()
-	if err := config.UnmarshalKey("server.gin", c); err != nil {
+	if err := config.UnmarshalKey("server", c); err != nil {
 		return err
 	}
-	xgin.WithServer(xgin.New(c))
-	return xgin.GetServer().Init()
+	WithServer(xgin.New(c))
+	return GetServer().Init()
 }
 
 func Serve(ctx context.Context) error {
-	return xgin.GetServer().Serve()
+	return GetServer().Serve()
 }

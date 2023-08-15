@@ -4,8 +4,7 @@ import (
 	"github.com/NetEase-Media/easy-ngo/app"
 	"github.com/gin-gonic/gin"
 
-	_ "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xgin"
-	"github.com/NetEase-Media/easy-ngo/server/contrib/xgin"
+	xgin "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xgin"
 )
 
 func main() {

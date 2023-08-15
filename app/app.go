@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/NetEase-Media/easy-ngo/config"
+	"github.com/NetEase-Media/easy-ngo/utils/xgo"
 	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap"
 	"github.com/fatih/color"
@@ -65,6 +66,7 @@ func (app *App) Init(fns ...func() error) error {
 				return
 			}
 		}
+		err = xgo.SerialUntilError(fns...)()
 	})
 	return err
 }
@@ -78,6 +80,7 @@ func (app *App) Start() error {
 			return err
 		}
 	}
+	app.status = Running
 	return nil
 }
 
