@@ -9,6 +9,8 @@ import (
 	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap"
 	"github.com/fatih/color"
+
+	_ "github.com/NetEase-Media/easy-ngo/config/contrib/xviper"
 )
 
 const (
@@ -65,6 +67,18 @@ func (app *App) Init(fns ...func() error) error {
 		}
 	})
 	return err
+}
+
+func (app *App) Start() error {
+	app.status = Starting
+	ctx := context.Background()
+	fs := GetFns(Starting)
+	for i := range fs {
+		if err := fs[i](ctx); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (app *App) initLogger() error {
