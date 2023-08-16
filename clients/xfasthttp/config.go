@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package httplib
+package xfasthttp
 
 import (
 	"crypto/tls"
@@ -23,7 +23,7 @@ type Duration struct {
 	time.Duration
 }
 
-type Option struct {
+type Config struct {
 	// User-Agent header，如果为空会设置默认header
 	Name string
 
@@ -62,43 +62,19 @@ type Option struct {
 
 	// 等待空闲连接的最大时间。默认情况不等待，如果没有空闲连接返回ErrNoFreeConns错误。
 	MaxConnWaitTimeout time.Duration
-	//
-	EnableTracer bool
 }
 
-func (d *Duration) UnmarshalText(text []byte) error {
-	var err error
-	d.Duration, err = time.ParseDuration(string(text))
-	return err
-}
-
-func DefaultOption() *Option {
-	return &Option{
-		Name:                     "",
-		NoDefaultUserAgentHeader: false,
-		TLSConfig:                nil,
-		MaxConnsPerHost:          512,
-		MaxIdleConnDuration:      time.Second * 10,
-		//MaxConnDuration:
+func DefaultConfig() *Config {
+	return &Config{
+		Name:                      "default",
+		NoDefaultUserAgentHeader:  false,
+		TLSConfig:                 nil,
+		MaxConnsPerHost:           512,
+		MaxIdleConnDuration:       time.Second * 10,
 		MaxIdemponentCallAttempts: 5,
 		ReadBufferSize:            4096,
 		WriteBufferSize:           4096,
 		ReadTimeout:               time.Second * 60,
 		WriteTimeout:              time.Second * 60,
-		//MaxResponseBodySize:
-		//MaxConnWaitTimeout:
 	}
-}
-
-// depressed
-// func NewOption(key string) (*Option, error) {
-// 	opt := DefaultOption()
-// 	if err := conf.Get(key, opt); err != nil {
-// 		return nil, err
-// 	}
-// 	return opt, nil
-// }
-
-func checkOptions(opt *Option) error {
-	return nil
 }

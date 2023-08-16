@@ -12,24 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package httplib
-
-import "github.com/NetEase-Media/easy-ngo/xlog/xfmt"
+package xfasthttp
 
 var defaultHttpClient = Default()
 
-func Default() *HttpClient {
-	opt := DefaultOption()
-	opt.EnableTracer = true
-	client, _ := newWithOption(opt, &xfmt.XFmt{}, nil, nil)
+func Default() *Xfasthttp {
+	client, _ := New(DefaultConfig())
 	return client
 }
 
-func DefaultHttpClient() *HttpClient {
+func DefaultHttpClient() *Xfasthttp {
 	return defaultHttpClient
 }
 
-func SetDefaultHttpClient(client *HttpClient) {
+func SetDefaultHttpClient(client *Xfasthttp) {
 	defaultHttpClient = client
 }
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package httplib
+package xfasthttp
 
 import (
 	"context"
@@ -25,11 +25,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/clients/xsentinel"
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
 	"github.com/NetEase-Media/easy-ngo/xlog"
-	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/djimenez/iconv-go"
 	"github.com/valyala/fasthttp"
 )
@@ -68,11 +64,10 @@ type DataFlow struct {
 	header H
 	query  Query
 
-	wwwForm         WWWForm             // 使用AddWWWFrom或SetWWWForm写入的数据
-	timeout         time.Duration       // 单次请求的超时时间
-	degradeCallback func() error        // 降级回调函数
-	sentinelEntry   *base.SentinelEntry // 熔断登记
-	cbCallback      func() error        // 熔断回调
+	wwwForm         WWWForm       // 使用AddWWWFrom或SetWWWForm写入的数据
+	timeout         time.Duration // 单次请求的超时时间
+	degradeCallback func() error  // 降级回调函数
+	cbCallback      func() error  // 熔断回调
 
 	// 绑定回复的http body
 	// TODO: 因为只可能使用其中一种，可以考虑用interface保存，使用时再转换
@@ -88,18 +83,12 @@ type DataFlow struct {
 
 	Err error
 
-	logger  xlog.Logger
-	metrics metrics.Provider
-	tracer  tracer.Provider
-	do1     DoFunc
+	do1 DoFunc
 }
 
-func newDataFlow(c *HttpClient, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) *DataFlow {
+func newDataFlow(c *Xfasthttp) *DataFlow {
 	df := &DataFlow{
-		client:  c.client,
-		logger:  logger,
-		metrics: metrics,
-		tracer:  tracer,
+		client: c.client,
 	}
 	df.do1 = func(df1 *DataFlow, c context.Context) (int, error) {
 		return df1.doInternal()
@@ -157,7 +146,7 @@ func (df *DataFlow) SetJson(body interface{}) *DataFlow {
 	b, err := json.Marshal(body)
 	if err != nil {
 		df.Err = err
-		df.logger.Errorf("encoding body failed: %s", err.Error())
+		xlog.Errorf("encoding body failed: %s", err.Error())
 		return df
 	}
 
@@ -268,7 +257,7 @@ func (df *DataFlow) processRequest() {
 
 // processResponse 解析回复，存储到绑定的变量中
 func (df *DataFlow) processResponse(res *fasthttp.Response) error {
-	df.logger.Debugf("http recv response header\n%s\n body\n%s", &res.Header, string(res.Body()))
+	xlog.Debugf("http recv response header\n%s\n body\n%s", &res.Header, string(res.Body()))
 
 	if err := df.encodeHeader(&res.Header); err != nil {
 		return err
@@ -280,10 +269,6 @@ func (df *DataFlow) processResponse(res *fasthttp.Response) error {
 	}
 
 	// 如果是5XX则记录熔断错误
-	statusCode := res.StatusCode()
-	if statusCode >= 500 && statusCode < 600 && df.sentinelEntry != nil {
-		xsentinel.TraceError(df.sentinelEntry, fmt.Errorf("exceptional status code %d", statusCode))
-	}
 
 	if err := df.encodeBody(res); err != nil {
 		return err
@@ -294,7 +279,7 @@ func (df *DataFlow) processResponse(res *fasthttp.Response) error {
 
 // send 根据当前状态选择发送请求
 func (df *DataFlow) send(res *fasthttp.Response) (err error) {
-	df.logger.Debugf("http send request header {%s} body {%s}", df.req.Header.String(), string(df.req.Body()))
+	xlog.Debugf("http send request header {%s} body {%s}", df.req.Header.String(), string(df.req.Body()))
 
 	if df.timeout != 0 {
 		return df.client.DoTimeout(df.req, res, df.timeout)
@@ -308,36 +293,11 @@ func (df *DataFlow) send(res *fasthttp.Response) (err error) {
 // 注意一旦使用后DataFlow将不可再使用
 func (df *DataFlow) doInternal() (statusCode int, err error) {
 	// var stats *httpclient.StatsHolder
-	start := time.Now()
-	url := string(df.req.URI().FullURI())
-	method := string(df.req.Header.Method())
 	defer func() {
-		// if metrics.IsMetricsEnabled() {
-		// 	if err != nil {
-		// 		collectors.HttpClientCollector().OnError(stats, err)
-		// 	}
-		// 	collectors.HttpClientCollector().OnComplete(stats, statusCode)
-		// }
-		if df.metrics != nil { // whether we need switch ?
-			if err != nil {
-				collectError(url, method, statusCode)
-			}
-			collectCalls(url, method, start, statusCode)
-		}
-
 		df.release()
-
 		// 清空，防止垃圾和重复使用
 		df.reset()
 	}()
-
-	// url := string(df.req.URI().FullURI())
-	// method := string(df.req.Header.Method())
-
-	// if metrics.IsMetricsEnabled() {
-	// 	stats = collectors.HttpClientCollector().OnStart(url, method)
-	// }
-
 	if df.Err != nil {
 		return 0, df.Err
 	}
@@ -362,15 +322,6 @@ func (df *DataFlow) Do(ctx context.Context) (statusCode int, err error) {
 	return df.do1(df, ctx)
 }
 
-// reset 清理对象，防止重复使用，是使用sync.Pool的前置动作
-// release 结束调用，释放资源
-func (df *DataFlow) release() {
-	if df.sentinelEntry != nil {
-		df.sentinelEntry.Exit()
-	}
-	fasthttp.ReleaseRequest(df.req)
-}
-
 // reset 清理对象，防止重复使用。如果使用sync.Pool必须调用。
 func (df *DataFlow) reset() {
 	df.req = nil
@@ -380,7 +331,6 @@ func (df *DataFlow) reset() {
 	df.wwwForm = nil
 	df.headerBinder = nil
 	df.degradeCallback = nil
-	df.sentinelEntry = nil
 	df.cbCallback = nil
 	df.Err = nil
 }
@@ -388,19 +338,6 @@ func (df *DataFlow) reset() {
 // Degrade 注册降级回调函数
 func (df *DataFlow) Degrade(f func() error) *DataFlow {
 	df.degradeCallback = f
-	return df
-}
-
-func (df *DataFlow) CircuitBreaker(resource string, f func() error) *DataFlow {
-	var blockErr *base.BlockError
-	df.sentinelEntry, blockErr = xsentinel.Entry(resource)
-	if blockErr != nil {
-		// 调用熔断回调
-		df.Err = &xsentinel.BlockError{
-			BlockErr: blockErr,
-			Err:      f(),
-		}
-	}
 	return df
 }
 
@@ -444,7 +381,7 @@ func (df *DataFlow) encodeBody(res *fasthttp.Response) (err error) {
 		if charset := getCharset(string(res.Header.ContentType())); !strings.EqualFold(charset, "utf-8") {
 			output, e := iconv.ConvertString(string(body), charset, "utf-8")
 			if e != nil {
-				df.logger.Errorf("convert string %s from %s to %s error: %v", charset, "utf-8", e)
+				xlog.Errorf("convert string %s from %s to %s error: %v", charset, "utf-8", e)
 				*df.bodyString = string(body)
 				return
 			}
@@ -473,7 +410,7 @@ func (df *DataFlow) encodeBody(res *fasthttp.Response) (err error) {
 		if charset := getCharset(string(res.Header.ContentType())); !strings.EqualFold(charset, "utf-8") {
 			output, e := iconv.ConvertString(string(body), charset, "utf-8")
 			if e != nil {
-				df.logger.Errorf("convert string %s from %s to %s error: %v", charset, "utf-8", e)
+				xlog.Errorf("convert string %s from %s to %s error: %v", charset, "utf-8", e)
 				err = json.Unmarshal(body, df.bodyJson)
 				return
 			}

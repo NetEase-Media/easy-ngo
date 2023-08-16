@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package httplib
+package xfasthttp
 
 import (
 	"encoding/json"
@@ -20,14 +20,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/djimenez/iconv-go"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGet(t *testing.T) {
 	var body []byte
-	c, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err := New(DefaultConfig())
 	_, err = c.Get("http://www.163.com").BindBytes(&body).doInternal()
 	assert.Nil(t, err)
 }
@@ -47,7 +46,7 @@ func TestHttpClientGet(t *testing.T) {
 	}))
 	defer s.Close()
 
-	c, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err := New(DefaultConfig())
 
 	var obj testJsonBody
 	statusCode, err := c.Get(s.URL).BindJson(&obj).doInternal()
@@ -72,7 +71,7 @@ func TestHttpClientPost(t *testing.T) {
 	}))
 	defer s.Close()
 
-	c, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err := New(DefaultConfig())
 
 	var obj testJsonBody
 	statusCode, err := c.Post(s.URL).BindJson(&obj).doInternal()
@@ -91,14 +90,14 @@ func TestInit(t *testing.T) {
 
 	defaultHttpClient = nil
 	var res1 []byte
-	client, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err := New(DefaultConfig())
 	assert.Nil(t, err)
-	statusCode, err := client.Get(s.URL).BindBytes(&res1).doInternal()
+	statusCode, err := c.Get(s.URL).BindBytes(&res1).doInternal()
 	assert.EqualValues(t, body, res1)
 	assert.Equal(t, http.StatusOK, statusCode)
 
 	var res2 []byte
-	c, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err = New(DefaultConfig())
 	statusCode, err = c.Get(s.URL).BindBytes(&res2).doInternal()
 	assert.Nil(t, err)
 	assert.EqualValues(t, body, res2)
@@ -122,7 +121,7 @@ func TestCharset(t *testing.T) {
 	}))
 	defer s.Close()
 
-	c, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err := New(DefaultConfig())
 
 	var res0 string
 	statusCode, err := c.Get(s.URL).BindString(&res0).doInternal()
@@ -147,17 +146,17 @@ func TestCharset(t *testing.T) {
 func TestCharset_gbk(t *testing.T) {
 	var res string
 	url := "http://www.netease.com"
-	c, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err := New(DefaultConfig())
 	statusCode, err := c.Get(url).BindString(&res).doInternal()
 	assert.NoError(t, err)
-	assert.Contains(t, res, "习近平")
+	assert.Contains(t, res, "xxx")
 	assert.Equal(t, http.StatusOK, statusCode)
 }
 
 func TestCharset_utf8(t *testing.T) {
 	var res string
 	url := "http://www.netease.com"
-	c, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err := New(DefaultConfig())
 	statusCode, err := c.Get(url).BindString(&res).doInternal()
 	assert.NoError(t, err)
 	assert.Contains(t, res, "这位同学我要测试延伸阅读了哈")
@@ -166,7 +165,7 @@ func TestCharset_utf8(t *testing.T) {
 
 func TestCharset_String2JsonErr(t *testing.T) {
 	url := "http://www.netease.com"
-	c, err := newWithOption(&Option{}, &xfmt.XFmt{}, nil, nil)
+	c, err := New(DefaultConfig())
 	var res1 string
 	_, err = c.Get(url).BindJson(&res1).doInternal()
 	assert.Error(t, err)

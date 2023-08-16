@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package httplib
+package xfasthttp
 
 import (
 	"context"
@@ -27,23 +27,18 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/clients/xsentinel"
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/alibaba/sentinel-golang/core/circuitbreaker"
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 )
 
-func newTestHttpClient() *HttpClient {
-	c := &HttpClient{
-		client: &fasthttp.Client{},
-		opt:    *DefaultOption(),
-	}
+func newTestHttpClient() *Xfasthttp {
+	c, _ := New(DefaultConfig())
 	return c
 }
 
 func testNewDataFlow() *DataFlow {
-	lg, _ := xfmt.Default()
-	df := newDataFlow(newTestHttpClient(), lg, nil, nil)
+	df := newDataFlow(newTestHttpClient())
 
 	return df
 }

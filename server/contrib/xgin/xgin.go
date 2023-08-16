@@ -90,8 +90,8 @@ func (s *Server) metricsMiddleware() gin.HandlerFunc {
 	}
 }
 
-func (server *Server) Shutdown() error {
-	return nil
+func (s *Server) Shutdown() error {
+	return s.Server.Close()
 }
 
 func (server *Server) Healthz() bool {

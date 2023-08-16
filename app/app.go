@@ -134,11 +134,11 @@ func (app *App) startPlugins() error {
 func (app *App) waitSignals() {
 	app.smu.Lock()
 	defer app.smu.Unlock()
-	xlog.Infof("eas-ngo Stopping!")
 	signals.Shutdown(func(grace bool) {
+		xlog.Infof("easy-ngo Stopping!")
 		_ = app.Shutdown()
+		xlog.Infof("easy-ngo Stopped!")
 	})
-	xlog.Infof("eas-ngo Stopped!")
 }
 
 func (app *App) Shutdown() (err error) {

@@ -11,6 +11,7 @@ import (
 func init() {
 	app.RegisterPlugin(app.Initialize, Initialize)
 	app.RegisterPlugin(app.Starting, Serve)
+	app.RegisterPlugin(app.Stopping, Shutdown)
 }
 
 func Initialize(ctx context.Context) error {
@@ -24,4 +25,8 @@ func Initialize(ctx context.Context) error {
 
 func Serve(ctx context.Context) error {
 	return GetServer().Serve()
+}
+
+func Shutdown(ctx context.Context) error {
+	return GetServer().Shutdown()
 }

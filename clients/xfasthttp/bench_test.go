@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package httplib
+package xfasthttp
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
-
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 )
 
 func BenchmarkHTTP_1Conn_1Delay(b *testing.B) {
@@ -65,10 +63,7 @@ func testRunBench(b *testing.B, n int, blockMS int) {
 	}))
 	defer s.Close()
 
-	c, _ := newWithOption(&Option{
-		MaxConnsPerHost:    n,
-		MaxConnWaitTimeout: time.Second * 10,
-	}, &xfmt.XFmt{}, nil, nil)
+	c, _ := New(DefaultConfig())
 	b.SetParallelism(20)
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
