@@ -9,11 +9,7 @@ import (
 
 func main() {
 	app := app.New()
-	err := app.Init(addRoutes)
-	if err != nil {
-		panic(err)
-	}
-	app.Start()
+	app.Start(addRoutes)
 }
 
 func addRoutes() error {

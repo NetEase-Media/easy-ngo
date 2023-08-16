@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/server"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/gin-gonic/gin"
 )
 
@@ -45,7 +46,12 @@ func (server *Server) Serve() error {
 		Addr:    server.Address(),
 		Handler: server,
 	}
-	return server.Server.Serve(server.listener)
+	err := server.Server.Serve(server.listener)
+	if err != nil && err == http.ErrServerClosed {
+		xlog.Panicf("close gin[%s]", err)
+		return nil
+	}
+	return nil
 }
 
 func (s *Server) Init() error {
@@ -59,6 +65,7 @@ func (s *Server) Init() error {
 	}
 	listener, err := net.Listen("tcp", s.Address())
 	if err != nil {
+		xlog.Panicf("gin Init error![%s]", err)
 		return err
 	}
 	s.listener = listener
