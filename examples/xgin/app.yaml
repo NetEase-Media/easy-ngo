@@ -1,0 +1,8 @@
+server:
+  port: 8888
+  enabledMetric: false
+metrics:
+  path: /metrics
+  port: 8888
+logger:
+  format: text

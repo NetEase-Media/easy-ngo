@@ -1,132 +1,80 @@
 package config
 
 import (
-	"encoding/json"
-	"fmt"
-	"reflect"
+	"path/filepath"
 	"strings"
-	"sync"
-
-	"github.com/NetEase-Media/easy-ngo/config/source"
-	"github.com/NetEase-Media/easy-ngo/config/source/env"
-	"github.com/NetEase-Media/easy-ngo/config/source/file"
-	"github.com/NetEase-Media/easy-ngo/config/source/parameter"
+	"time"
 )
 
 type Config struct {
-	KeyMap       *sync.Map
-	sources      []source.ConfigSource
-	configPathes []string
+	protocols map[string]string
 }
 
-func New(configSource string) *Config {
-	var sourcePathes []string
-	if len(configSource) == 0 { // read from default file
-		sourcePathes = loadDefaultSourcePath()
-	} else { // read from -c parameter
-		sourcePathes = strings.Split(configSource, ";")
+func New() *Config {
+	config = &Config{
+		protocols: make(map[string]string),
 	}
-	// if len(sourcePathes) == 0 {
-	// 	panic("App need default config source. ^@^")
-	// }
-	// default implement
-	environments := env.New()
-	parameters := parameter.New()
-	localFile := &file.LocalFile{}
-	c := &Config{KeyMap: &sync.Map{}, sources: []source.ConfigSource{environments, parameters, localFile}}
-	c.configPathes = sourcePathes
+	return config
+}
+
+func (c *Config) Init() error {
+	//初始化Contrib
+	for key, value := range c.protocols {
+		//初始化Contrib
+		vendors[key].Init(value)
+	}
+	return nil
+}
+
+func (c *Config) AddProtocol(protocol string) *Config {
+	//如果没有找到://，则默认为file://，文件类型为yaml
+	if !strings.Contains(protocol, "://") {
+		//从后往前截取.号，.前面为文件路径和文件名，后面为文件类型
+		fileNameAndExt := strings.Split(protocol, ".")
+		dir, file := filepath.Split(fileNameAndExt[0])
+		//从后往前截取第一个/，前面为路径，后面为文件名
+		protocol = "path=" + dir + ";name=" + file
+		if len(fileNameAndExt) == 2 {
+			protocol = protocol + ";type=" + fileNameAndExt[1]
+		}
+		protocol = "file://" + protocol
+	}
+	c.protocols[strings.Split(protocol, "://")[0]] = protocol
 	return c
 }
 
-func NewDefault() *Config {
-	// default implement
-	environments := env.New()
-	parameters := parameter.New()
-	localFile := &file.LocalFile{}
-	c := &Config{KeyMap: &sync.Map{}, sources: []source.ConfigSource{environments, parameters, localFile}}
-	return c
-}
-
-func (c *Config) ParseAndSetSourePath(configSource string) {
-	var sourcePathes []string
-	if len(configSource) == 0 { // read from default file
-		sourcePathes = loadDefaultSourcePath()
-	} else { // read from -c parameter
-		sourcePathes = strings.Split(configSource, ";")
-	}
-	c.configPathes = sourcePathes
-}
-
-func loadDefaultSourcePath() []string {
-	m, err := file.Load(nil)
-	var path interface{}
-	if err == nil && m != nil {
-		M := Flattening(m)
-		path = M["default.config.addr"]
-	}
-	if path == nil {
-		return nil
-	}
-	switch path.(type) {
-	case string:
-		return strings.Split(path.(string), ";")
-	case []interface{}:
-		var ret []string
-		for _, v := range path.([]interface{}) {
-			ret = append(ret, v.(string))
-		}
-		return ret
-	default:
-		return nil
-	}
-}
-
-func (c *Config) Initialize() error {
-	// load default application config
-	if len(c.configPathes) == 0 {
-		m, err := file.Load(nil)
-		if err != nil {
-			return err
-		}
-		M := Flattening(m)
-		if len(M) == 0 {
-			return nil
-		}
-		for k, v := range M {
-			c.KeyMap.Store(k, v)
-		}
-		return nil
-	}
-	return c.load()
-}
-
-func (c *Config) register(src source.ConfigSource) {
-	c.sources = append(c.sources, src)
-}
-
-func (c *Config) load() error {
-	M := make(map[string]interface{})
-	for _, source := range c.sources {
-		if source == nil {
-			continue
-		}
-		m, err := source.Load(c.configPathes)
-		if err != nil {
-			return err
-		}
-		if m == nil {
-			continue
-		}
-		expandM := Expand(m)
-		bs, _ := json.MarshalIndent(expandM, "", "  ")
-		fmt.Printf("source type:%s, content:%s\n", reflect.TypeOf(source), bs)
-		flattenM := Flattening(expandM)
-		Merge(M, flattenM)
-	}
-	if len(M) > 0 {
-		for k, v := range M {
-			c.KeyMap.Store(k, v)
+func (c *Config) ReadConfig() error {
+	for scheme, _ := range c.protocols {
+		if "file" == scheme {
+			err := vendors[scheme].Read()
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
+}
+
+func (c *Config) GetString(key string) string {
+	return propertiesVendor.GetString(key)
+}
+
+func (c *Config) UnmarshalKey(key string, rawVal interface{}) error {
+	return propertiesVendor.UnmarshalKey(key, rawVal)
+}
+
+func (c *Config) GetInt(key string) int {
+	return propertiesVendor.GetInt(key)
+}
+
+func (c *Config) GetBool(key string) bool {
+	return propertiesVendor.GetBool(key)
+}
+
+func (c *Config) GetTime(key string) time.Time {
+	return propertiesVendor.GetTime(key)
+}
+
+func (c *Config) GetFloat64(key string) float64 {
+	return propertiesVendor.GetFloat64(key)
 }

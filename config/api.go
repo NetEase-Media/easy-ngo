@@ -1,100 +1,33 @@
-// Copyright 2022 NetEase Media Technology（Beijing）Co., Ltd.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// 	http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package config
 
-import (
-	"encoding/json"
-
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/proto"
-
-	"github.com/NetEase-Media/easy-ngo/config/source"
-)
+import "time"
 
 var config *Config
 
-func GetDefault() *Config {
-	return config
-}
-
-func SetConfig(c *Config) {
-	config = c
-}
-
-func Register(src source.ConfigSource) {
-	if config == nil {
-		config = NewDefault() // init
-	}
-	config.register(src)
-}
-
-func Reload() error {
-	if config == nil {
-		return nil
-	}
-	return config.load()
+func GetString(key string) string {
+	return config.GetString(key)
 }
 
 func GetInt(key string) int {
-	value, ok := config.KeyMap.Load(key)
-	if !ok || value == nil {
-		return 0
-	}
-	switch value.(type) {
-	case int:
-		return value.(int)
-	default:
-		return 0
-	}
+	return config.GetInt(key)
 }
 
-func GetString(key string) string {
-	value, ok := config.KeyMap.Load(key)
-	if !ok || value == nil {
-		return ""
-	}
-	switch value.(type) {
-	case string:
-		return value.(string)
-	default:
-		return ""
-	}
-
+func GetBool(key string) bool {
+	return config.GetBool(key)
 }
 
-func Get(key string, v interface{}) error {
-	value, ok := config.KeyMap.Load(key)
-	if !ok {
-		return nil
-	}
-	b, err := json.Marshal(value)
-	if err != nil {
-		return err
-	}
-
-	if m, ok := v.(proto.Message); ok {
-		return protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(b, m)
-	}
-
-	err = json.Unmarshal(b, v)
-	if err != nil {
-		return err
-	}
-	return nil
+func GetTime(key string) time.Time {
+	return config.GetTime(key)
 }
 
-func Prefix() string {
-	return "ngo"
+func GetFloat64(key string) float64 {
+	return config.GetFloat64(key)
+}
+
+func UnmarshalKey(key string, rawVal interface{}) error {
+	return config.UnmarshalKey(key, &rawVal)
+}
+
+func WithConfig(c *Config) {
+	config = c
 }
