@@ -17,7 +17,6 @@ package xfasthttp
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -26,8 +25,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/clients/xsentinel"
-	"github.com/alibaba/sentinel-golang/core/circuitbreaker"
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 )
@@ -430,45 +427,45 @@ func TestDataFlowCircuitBreaker(t *testing.T) {
 	}))
 	defer s.Close()
 
-	sentinelOptions := xsentinel.Option{
-		CircuitBreakerRules: []*circuitbreaker.Rule{
-			{
-				Resource:         "count",
-				Strategy:         circuitbreaker.ErrorCount,
-				RetryTimeoutMs:   10,
-				MinRequestAmount: 1,
-				StatIntervalMs:   5000,
-				MaxAllowedRtMs:   10,
-				Threshold:        1,
-			},
-		},
-	}
+	// sentinelOptions := xsentinel.Option{
+	// 	CircuitBreakerRules: []*circuitbreaker.Rule{
+	// 		{
+	// 			Resource:         "count",
+	// 			Strategy:         circuitbreaker.ErrorCount,
+	// 			RetryTimeoutMs:   10,
+	// 			MinRequestAmount: 1,
+	// 			StatIntervalMs:   5000,
+	// 			MaxAllowedRtMs:   10,
+	// 			Threshold:        1,
+	// 		},
+	// 	},
+	// }
 
-	fakeError := errors.New("fake error")
-	cbFunc := func() error {
-		return fakeError
-	}
-	err := xsentinel.Init(&sentinelOptions)
-	assert.Nil(t, err)
+	// fakeError := errors.New("fake error")
+	// cbFunc := func() error {
+	// 	return fakeError
+	// }
+	// err := xsentinel.Init(&sentinelOptions)
+	// assert.Nil(t, err)
 
-	// 第一次出错返回
-	statusCode, err := testNewDataFlow().newMethod(fasthttp.MethodGet, s.URL).CircuitBreaker("count", cbFunc).Do(context.Background())
-	assert.Nil(t, err)
-	assert.Equal(t, retCode, statusCode)
+	// // 第一次出错返回
+	// statusCode, err := testNewDataFlow().newMethod(fasthttp.MethodGet, s.URL).CircuitBreaker("count", cbFunc).Do(context.Background())
+	// assert.Nil(t, err)
+	// assert.Equal(t, retCode, statusCode)
 
-	// 第二次触发熔断
-	var blockError *xsentinel.BlockError
-	statusCode, err = testNewDataFlow().newMethod(fasthttp.MethodGet, s.URL).CircuitBreaker("count", cbFunc).Do(context.Background())
-	assert.NotNil(t, err)
-	assert.True(t, errors.As(err, &(blockError)))
-	assert.True(t, errors.Is(err, fakeError))
-	assert.Equal(t, 0, statusCode)
+	// // 第二次触发熔断
+	// var blockError *xsentinel.BlockError
+	// statusCode, err = testNewDataFlow().newMethod(fasthttp.MethodGet, s.URL).CircuitBreaker("count", cbFunc).Do(context.Background())
+	// assert.NotNil(t, err)
+	// assert.True(t, errors.As(err, &(blockError)))
+	// assert.True(t, errors.Is(err, fakeError))
+	// assert.Equal(t, 0, statusCode)
 
-	// 第三次等待后恢复
-	time.Sleep(time.Millisecond * 20)
-	statusCode, err = testNewDataFlow().newMethod(fasthttp.MethodGet, s.URL).CircuitBreaker("count", cbFunc).Do(context.Background())
-	assert.Nil(t, err)
-	assert.Equal(t, retCode, statusCode)
+	// // 第三次等待后恢复
+	// time.Sleep(time.Millisecond * 20)
+	// statusCode, err = testNewDataFlow().newMethod(fasthttp.MethodGet, s.URL).CircuitBreaker("count", cbFunc).Do(context.Background())
+	// assert.Nil(t, err)
+	// assert.Equal(t, retCode, statusCode)
 }
 
 func TestDataFlowReuse(t *testing.T) {

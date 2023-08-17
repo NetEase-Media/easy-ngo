@@ -12,6 +12,8 @@ import (
 	"github.com/NetEase-Media/easy-ngo/utils/xgo"
 	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap"
+	"github.com/NetEase-Media/easy-ngo/xmetrics"
+	"github.com/NetEase-Media/easy-ngo/xmetrics/contrib/xprometheus"
 	"github.com/fatih/color"
 	"golang.org/x/sync/errgroup"
 
@@ -73,7 +75,10 @@ func (app *App) Init(fns ...func() error) error {
 			return
 		}
 		//初始化Metrics
-
+		err = app.initMetrics()
+		if err != nil {
+			return
+		}
 		//初始化Tracer
 
 		//初始化Plugins
@@ -156,6 +161,17 @@ func (app *App) Shutdown() (err error) {
 		app.cycle.Close()
 	})
 	return
+}
+
+func (app *App) initMetrics() error {
+	metricsConfig := xprometheus.DefaultConfig()
+	if err := config.UnmarshalKey("metrics", metricsConfig); err != nil {
+		return err
+	}
+	provider := xprometheus.NewProvider(metricsConfig)
+	go provider.Start()
+	xmetrics.WithVendor(provider)
+	return nil
 }
 
 func (app *App) initLogger() error {

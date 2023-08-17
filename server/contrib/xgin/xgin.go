@@ -22,6 +22,7 @@ import (
 
 	"github.com/NetEase-Media/easy-ngo/server"
 	"github.com/NetEase-Media/easy-ngo/xlog"
+	"github.com/NetEase-Media/easy-ngo/xmetrics"
 	"github.com/gin-gonic/gin"
 )
 
@@ -75,18 +76,18 @@ func (s *Server) Init() error {
 
 func (s *Server) metricsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// if s.config.MetricsPath == c.Request.URL.Path {
-		// 	c.Next()
-		// 	return
-		// }
+		if xmetrics.GetPath() == c.Request.URL.Path {
+			c.Next()
+			return
+		}
 		start := time.Now()
 		c.Next()
-		s.httpMetrics.Record((time.Now().Nanosecond()-start.Nanosecond())/1e6, server.HttpLabels{
+		s.httpMetrics.Record(server.HttpLabels{
 			Url:    c.Request.URL.Path,
 			Method: c.Request.Method,
 			Code:   c.Writer.Status(),
 			Domain: c.Request.Host,
-		})
+		}, start, time.Now())
 	}
 }
 

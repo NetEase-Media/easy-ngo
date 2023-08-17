@@ -36,5 +36,7 @@ type Provider interface {
 	NewCounter(name string, labelNames ...string) Counter
 	NewGauge(name string, labelNames ...string) Gauge
 	NewHistogram(name string, buckets []float64, labelNames ...string) Histogram
-	Stop()
+	Stop() error
+	Start() error
+	GetPath() string
 }

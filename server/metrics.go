@@ -2,27 +2,24 @@ package server
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/NetEase-Media/easy-ngo/xmetrics"
 )
 
 var (
-	requestTotal xmetrics.Counter
+	requestTotal    xmetrics.Counter
+	requestDuration xmetrics.Histogram
 )
 
 var (
-	metricRequestTotal    = "gin_request_total"
-	metricRequestUVTotal  = "gin_request_uv_total"
-	metricURIRequestTotal = "gin_uri_request_total"
-	metricRequestBody     = "gin_request_body_total"
-	metricResponseBody    = "gin_response_body_total"
-	metricRequestDuration = "gin_request_duration"
-	metricSlowRequest     = "gin_slow_request_total"
+	metricRequestTotal    = "request_total"
+	metricRequestDuration = "request_duration"
 
-	labelDomain = "domain"
-	labelURL    = "url"
-	labelMethod = "method"
-	labelCode   = "code"
+	LABELDOMAIN = "domain"
+	LABELURL    = "url"
+	LABELMETHOD = "method"
+	LABELCODE   = "code"
 )
 
 type HttpMetrics struct {
@@ -35,8 +32,9 @@ type HttpLabels struct {
 	Domain string
 }
 
-func (httpMetrics *HttpMetrics) Record(duration int, labels HttpLabels) {
-	requestTotal.With(labelDomain, labels.Domain, labelURL, labels.Url, labelMethod, labels.Method, labelCode, strconv.Itoa(labels.Code)).Add(1)
+func (httpMetrics *HttpMetrics) Record(labels HttpLabels, start time.Time, end time.Time) {
+	requestTotal.With(LABELDOMAIN, labels.Domain, LABELURL, labels.Url, LABELMETHOD, labels.Method, LABELCODE, strconv.Itoa(labels.Code)).Add(1)
+	requestDuration.With(LABELDOMAIN, labels.Domain, LABELURL, labels.Url, LABELMETHOD, labels.Method, LABELCODE).Observe(float64((end.Nanosecond() - start.Nanosecond()) / 1e6))
 }
 
 func NewHttpMetrics() *HttpMetrics {
@@ -44,7 +42,24 @@ func NewHttpMetrics() *HttpMetrics {
 }
 
 func (httpMetrics *HttpMetrics) Init() {
-	// bukets := prometheus.ExponentialBuckets(10, 10, 5)
-	// requestTotal = xmetrics.NewCounter(metricRequestTotal, "url", "method", "code")
-	// requestDuration = xmetrics.NewHistogram(metricRequestDuration, bukets, "url", "method", "code")
+	requestTotal = xmetrics.NewCounter(metricRequestTotal, LABELDOMAIN, LABELURL, LABELMETHOD, LABELCODE)
+	requestDuration = xmetrics.NewHistogram(metricRequestDuration, httpMetrics.exponentialBuckets(10, 10, 5), LABELDOMAIN, LABELURL, LABELMETHOD, LABELCODE)
+}
+
+func (httpMetrics *HttpMetrics) exponentialBuckets(start, factor float64, count int) []float64 {
+	if count < 1 {
+		panic("ExponentialBuckets needs a positive count")
+	}
+	if start <= 0 {
+		panic("ExponentialBuckets needs a positive start value")
+	}
+	if factor <= 1 {
+		panic("ExponentialBuckets needs a factor greater than 1")
+	}
+	buckets := make([]float64, count)
+	for i := range buckets {
+		buckets[i] = start
+		start *= factor
+	}
+	return buckets
 }

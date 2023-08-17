@@ -9,8 +9,8 @@ type Config struct {
 
 func DefaultConfig() *Config {
 	return &Config{
-		Namespace: "default",
-		Subsystem: "default",
+		Namespace: "",
+		Subsystem: "",
 		Path:      "/metrics",
 		Addr:      ":8888",
 	}

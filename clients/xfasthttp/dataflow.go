@@ -25,7 +25,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/djimenez/iconv-go"
 	"github.com/valyala/fasthttp"
 )

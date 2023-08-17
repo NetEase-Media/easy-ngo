@@ -60,9 +60,15 @@ func (p *prometheusProvider) NewHistogram(name string, buckets []float64, labelN
 	}, labelNames)
 }
 
-func (p *prometheusProvider) Stop() {}
+func (p *prometheusProvider) Stop() error {
+	return nil
+}
 
 func (p *prometheusProvider) Start() error {
 	http.Handle(p.config.Path, promhttp.Handler())
 	return http.ListenAndServe(p.config.Addr, nil)
+}
+
+func (p *prometheusProvider) GetPath() string {
+	return p.config.Path
 }
