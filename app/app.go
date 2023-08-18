@@ -14,6 +14,7 @@ import (
 	"github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap"
 	"github.com/NetEase-Media/easy-ngo/xmetrics"
 	"github.com/NetEase-Media/easy-ngo/xmetrics/contrib/xprometheus"
+	"github.com/NetEase-Media/easy-ngo/xtracer"
 	"github.com/fatih/color"
 	"golang.org/x/sync/errgroup"
 
@@ -80,7 +81,10 @@ func (app *App) Init(fns ...func() error) error {
 			return
 		}
 		//初始化Tracer
-
+		err = app.initTracer()
+		if err != nil {
+			return
+		}
 		//初始化Plugins
 		ctx := context.Background()
 		fs := GetFns(Initialize)
@@ -161,6 +165,16 @@ func (app *App) Shutdown() (err error) {
 		app.cycle.Close()
 	})
 	return
+}
+
+func (app *App) initTracer() error {
+	tracerConfig := xtracer.DefaultConfig()
+	if err := config.UnmarshalKey("tracer", tracerConfig); err != nil {
+		return err
+	}
+	provider := xtracer.New(tracerConfig)
+	xtracer.WithVendor(provider)
+	return nil
 }
 
 func (app *App) initMetrics() error {

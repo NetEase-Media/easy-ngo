@@ -1,8 +1,12 @@
 server:
   port: 8080
   enabledMetric: true
+  enabledTrace: true
 metrics:
   path: /metrics
   port: 8888
 logger:
   format: text
+tracer:
+  enabled: true
+  samplingRate: 1.0
