@@ -13,9 +13,18 @@ func set(key string, client *xfasthttp.Xfasthttp) {
 	httpClients[key] = client
 }
 
-func GetXfasthttp(key string) (cli *xfasthttp.Xfasthttp) {
+func GetXfasthttpByKey(key string) (cli *xfasthttp.Xfasthttp) {
 	var ok bool
 	cli, ok = httpClients[key]
+	if !ok {
+		return nil
+	}
+	return cli
+}
+
+func GetXfasthttp() (cli *xfasthttp.Xfasthttp) {
+	var ok bool
+	cli, ok = httpClients["default"]
 	if !ok {
 		return nil
 	}

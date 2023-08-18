@@ -1,4 +1,4 @@
-// Copyright 2023 NetEase Media Technology（Beijing）Co., Ltd.
+// Copyright 2022 NetEase Media Technology（Beijing）Co., Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package xgoroutinepool
+package xxxljob
 
-type Option struct {
-	Name           string // 客户端名称，需要唯一
-	Capacity       int32  // 协程池上限
-	ScaleThreshold int32  //
+type Config struct {
+	Name         string
+	Addr         string
+	Token        string
+	ExecutorIP   string
+	ExecutorPort string
+	ExecutorName string
+}
+
+func DefaultConfig() *Config {
+	return &Config{}
 }

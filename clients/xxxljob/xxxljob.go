@@ -12,34 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package xzk
+package xxxljob
 
 import (
-	"errors"
-	"time"
+	xxl "github.com/xxl-job/xxl-job-executor-go"
 )
 
-func defaultOption() *Option {
-	return &Option{}
+type XJobManager struct {
+	config *Config
+	xxl.Executor
 }
 
-func checkOptions(opt *Option) error {
-	if opt.Name == "" {
-		return errors.New("client name can not be nil")
+func New(config *Config) *XJobManager {
+	exec := xxl.NewExecutor(
+		xxl.ServerAddr(config.Addr),
+		xxl.AccessToken(config.Token),
+		xxl.ExecutorIp(config.ExecutorIP),
+		xxl.ExecutorPort(config.ExecutorPort),
+		xxl.RegistryKey(config.ExecutorName),
+	)
+	return &XJobManager{
+		config:   config,
+		Executor: exec,
 	}
-
-	if len(opt.Addr) == 0 {
-		return errors.New("zk: server list must not be empty")
-	}
-
-	if opt.SessionTimeout == 0 {
-		opt.SessionTimeout = 5 * time.Second
-	}
-	return nil
 }
 
-type Option struct {
-	Name           string        // 客户端名称， 需要唯一
-	Addr           []string      // 节点地址
-	SessionTimeout time.Duration // 连接创建超时时间
+func (m *XJobManager) Init() {
+	m.Executor.Init()
 }

@@ -1,10 +1,10 @@
-package pluginxgrom
+package pluginxzk
 
 import (
 	"context"
 
 	"github.com/NetEase-Media/easy-ngo/app"
-	"github.com/NetEase-Media/easy-ngo/clients/xgorm"
+	"github.com/NetEase-Media/easy-ngo/clients/xzk"
 	"github.com/NetEase-Media/easy-ngo/config"
 )
 
@@ -13,17 +13,16 @@ func init() {
 }
 
 func Initialize(ctx context.Context) error {
-	configs := make([]xgorm.Config, 0)
-	if err := config.UnmarshalKey("gorm", configs); err != nil {
+	configs := make([]xzk.Config, 0)
+	if err := config.UnmarshalKey("zk", configs); err != nil {
 		return err
 	}
 	if len(configs) == 0 {
-		configs = append(configs, *xgorm.DefaultConfig())
+		configs = append(configs, *xzk.DefaultConfig())
 	}
 	for _, config := range configs {
-		cli := xgorm.New(&config)
-		cli.Init()
-		if err := cli.Init(); err != nil {
+		cli, err := xzk.New(&config)
+		if err != nil {
 			return err
 		}
 		set(config.Name, cli)

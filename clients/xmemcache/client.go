@@ -17,57 +17,29 @@ package xmemcache
 import (
 	"context"
 
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/bradfitz/gomemcache/memcache"
 )
 
-func New(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) (*MemcacheProxy, error) {
-	if err := checkOptions(opt); err != nil {
-		return nil, err
-	}
-	c := memcache.New(opt.Addr...)
-	c.Timeout = opt.Timeout
-	c.MaxIdleConns = opt.MaxIdleConns
+func New(config *Config) (*MemcacheProxy, error) {
+	c := memcache.New(config.Addr...)
+	c.Timeout = config.Timeout
+	c.MaxIdleConns = config.MaxIdleConns
 	p := &MemcacheProxy{
-		base:    c,
-		logger:  logger,
-		metrics: metrics,
-		tracer:  tracer,
-		hooks:   make([]Hook, 0),
-	}
-	if opt.EnableTracer {
-		p.AddHook(NewTracingHook())
-	}
-	if p.metrics != nil {
-		initMetrics(p.metrics)
+		base:  c,
+		hooks: make([]Hook, 0),
 	}
 	return p, nil
 }
-
-// func NewFromKey(key string) (*MemcacheProxy, error) {
-// 	opt := defaultOption()
-// 	err := conf.Get(key, opt)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return New(opt)
-// }
 
 type Hook interface {
 	Before(context.Context, string, ...string) (context.Context, error)
 	After(context.Context, error)
 }
 
-// MemcacheProxy memcache 三方包的包装器类
 type MemcacheProxy struct {
-	Opt     *Option
-	base    *memcache.Client
-	logger  xlog.Logger
-	metrics metrics.Provider
-	tracer  tracer.Provider
-	hooks   []Hook
+	Config *Config
+	base   *memcache.Client
+	hooks  []Hook
 }
 
 func (mp *MemcacheProxy) Initialize() error {
@@ -76,18 +48,6 @@ func (mp *MemcacheProxy) Initialize() error {
 
 func (mp *MemcacheProxy) Destory() error {
 	return nil
-}
-
-func (mp *MemcacheProxy) WithMetrics(metrics metrics.Provider) {
-	mp.metrics = metrics
-}
-
-// func (mp *MemcacheProxy) WithTracer(tracer tracer.Tracer) {
-// 	mp.tracer = tracer
-// }
-
-func (mp *MemcacheProxy) WithLogger(logger xlog.Logger) {
-	mp.logger = logger
 }
 
 func (mp *MemcacheProxy) AddHook(h Hook) {

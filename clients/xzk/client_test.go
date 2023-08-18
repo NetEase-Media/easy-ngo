@@ -28,7 +28,7 @@ import (
 var testZkClientAddr = "127.0.0.1:2181"
 
 func TestInit(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name:           "m",
 		Addr:           []string{testZkClientAddr},
 		SessionTimeout: time.Second * 5,
@@ -38,7 +38,7 @@ func TestInit(t *testing.T) {
 }
 
 func TestNewClientFromZookeeperException1(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name:           "",
 		Addr:           []string{testZkClientAddr},
 		SessionTimeout: time.Second * 5,
@@ -49,7 +49,7 @@ func TestNewClientFromZookeeperException1(t *testing.T) {
 }
 
 func TestNewClientFromZookeeperException2(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name:           "m",
 		Addr:           []string{},
 		SessionTimeout: time.Second * 5,
@@ -59,7 +59,7 @@ func TestNewClientFromZookeeperException2(t *testing.T) {
 }
 
 func TestNewClientFromZookeeperException3(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name:           "m",
 		Addr:           []string{"a"},
 		SessionTimeout: time.Second * 1,
@@ -69,7 +69,7 @@ func TestNewClientFromZookeeperException3(t *testing.T) {
 }
 
 func TestOptionsProxy_Close(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},

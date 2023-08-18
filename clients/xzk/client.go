@@ -17,17 +17,11 @@ package xzk
 import (
 	"sync"
 
-	// "github.com/NetEase-Media/easy-ngo/core/conf"
-	// tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-
 	"github.com/go-zookeeper/zk"
 )
 
-func New(opt *Option) (*ZookeeperProxy, error) {
-	if err := checkOptions(opt); err != nil {
-		return nil, err
-	}
-	proxy, err := newZookeeperProxy(opt)
+func New(config *Config) (*ZookeeperProxy, error) {
+	proxy, err := newZookeeperProxy(config)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +29,7 @@ func New(opt *Option) (*ZookeeperProxy, error) {
 }
 
 type ZookeeperProxy struct {
-	Opt        *Option
+	Config     *Config
 	Conn       *zk.Conn
 	tmpNode    sync.Map
 	listenCh   chan Event

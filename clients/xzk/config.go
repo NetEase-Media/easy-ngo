@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package xxxljob
+package xzk
 
-type Option struct {
-	Addr         string
-	Token        string
-	ExecutorIP   string
-	ExecutorPort string
-	ExecutorName string
+import (
+	"time"
+)
+
+func DefaultConfig() *Config {
+	return &Config{}
+}
+
+type Config struct {
+	Name           string        // 客户端名称， 需要唯一
+	Addr           []string      // 节点地址
+	SessionTimeout time.Duration // 连接创建超时时间
 }

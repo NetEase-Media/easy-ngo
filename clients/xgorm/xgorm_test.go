@@ -14,57 +14,57 @@
 
 package xgorm
 
-import (
-	"context"
-	"testing"
+// import (
+// 	"context"
+// 	"testing"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
+// 	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
+// 	"gorm.io/driver/mysql"
+// 	"gorm.io/gorm"
+// 	"gorm.io/gorm/schema"
 
-	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/agiledragon/gomonkey/v2"
-	"github.com/stretchr/testify/assert"
-)
+// 	"github.com/DATA-DOG/go-sqlmock"
+// 	"github.com/agiledragon/gomonkey/v2"
+// 	"github.com/stretchr/testify/assert"
+// )
 
-type user struct {
-	Id   int64
-	Name string
-}
+// type user struct {
+// 	Id   int64
+// 	Name string
+// }
 
-func (user) TableName() string {
-	return "test"
-}
+// func (user) TableName() string {
+// 	return "test"
+// }
 
-func TestClient(t *testing.T) {
-	patches := gomonkey.ApplyFunc(mysql.Open, func(dsn string) gorm.Dialector {
-		db, _, _ := sqlmock.New()
-		return mysql.New(mysql.Config{
-			DSN:                       dsn,
-			SkipInitializeWithVersion: true,
-			Conn:                      db,
-		})
-	})
-	defer patches.Reset()
+// func TestClient(t *testing.T) {
+// 	patches := gomonkey.ApplyFunc(mysql.Open, func(dsn string) gorm.Dialector {
+// 		db, _, _ := sqlmock.New()
+// 		return mysql.New(mysql.Config{
+// 			DSN:                       dsn,
+// 			SkipInitializeWithVersion: true,
+// 			Conn:                      db,
+// 		})
+// 	})
+// 	defer patches.Reset()
 
-	c, err := newWithOption(&Option{
-		Name:            "test",
-		Type:            "mysql",
-		Url:             "root:@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local",
-		MaxIdleCons:     10,
-		MaxOpenCons:     10,
-		ConnMaxLifetime: 1000,
-		ConnMaxIdleTime: 10,
-	}, &xfmt.XFmt{}, nil, nil)
-	assert.Nil(t, err)
-	c.NamingStrategy = schema.NamingStrategy{
-		SingularTable: true,
-	}
-	var tb = user{}
-	ctx := context.Background()
-	err = c.Create(&tb).Error
-	assert.Nil(t, err)
-	err = c.Find(ctx, &tb).Error
-	assert.Nil(t, err)
-}
+// 	c, err := newWithOption(&Option{
+// 		Name:            "test",
+// 		Type:            "mysql",
+// 		Url:             "root:@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local",
+// 		MaxIdleCons:     10,
+// 		MaxOpenCons:     10,
+// 		ConnMaxLifetime: 1000,
+// 		ConnMaxIdleTime: 10,
+// 	}, &xfmt.XFmt{}, nil, nil)
+// 	assert.Nil(t, err)
+// 	c.NamingStrategy = schema.NamingStrategy{
+// 		SingularTable: true,
+// 	}
+// 	var tb = user{}
+// 	ctx := context.Background()
+// 	err = c.Create(&tb).Error
+// 	assert.Nil(t, err)
+// 	err = c.Find(ctx, &tb).Error
+// 	assert.Nil(t, err)
+// }

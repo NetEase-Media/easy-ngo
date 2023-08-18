@@ -18,17 +18,16 @@ import (
 	"context"
 	"testing"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCRUD(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name: "m1",
 		Addr: []string{"127.0.0.1:11312"},
 	}
 
-	c, err := New(&o, &xfmt.XFmt{}, nil, nil)
+	c, err := New(&o)
 	assert.Equal(t, nil, err, "encounter error.")
 	assert.NotEqual(t, nil, c, "Init Client Failed")
 

@@ -34,7 +34,7 @@ const (
 )
 
 func TestCreateNode_00(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -51,7 +51,7 @@ func TestCreateNode_00(t *testing.T) {
 }
 
 func TestOptionsProxy_GetConnState_flag0(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -66,7 +66,7 @@ func TestOptionsProxy_GetConnState_flag0(t *testing.T) {
 }
 
 func TestOptionsProxy_GetSessionId_flag0(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -82,7 +82,7 @@ func TestOptionsProxy_GetSessionId_flag0(t *testing.T) {
 
 func TestOptionsProxy_CreateNode_flag0(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -108,7 +108,7 @@ func TestOptionsProxy_CreateNode_flag0(t *testing.T) {
 
 func TestOptionsProxy_CreateNodeWithAcls_flag1(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr: []string{ADDR},
@@ -139,7 +139,7 @@ func TestOptionsProxy_CreateNodeWithAcls_flag1(t *testing.T) {
 }
 func TestOptionsProxy_CreateNode_flag1(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr: []string{ADDR},
@@ -163,7 +163,7 @@ func TestOptionsProxy_CreateNode_flag1(t *testing.T) {
 
 func TestOptionsProxy_CreateNode_flag2(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -186,7 +186,7 @@ func TestOptionsProxy_CreateNode_flag2(t *testing.T) {
 
 func TestOptionsProxy_CreateNodeParent_flag0(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -232,7 +232,7 @@ func TestOptionsProxy_CreateNodeParent_flag0(t *testing.T) {
 
 func TestOptionsProxy_CreateNodeParent_flag1(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -256,7 +256,7 @@ func TestOptionsProxy_CreateNodeParent_flag1(t *testing.T) {
 
 func TestOptionsProxy_CreateNodeParent_flag2(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -281,7 +281,7 @@ func TestOptionsProxy_CreateNodeParent_flag2(t *testing.T) {
 
 func TestOptionsProxy_CreateNodeParent_flag3(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -301,7 +301,7 @@ func TestOptionsProxy_CreateNodeParent_flag3(t *testing.T) {
 
 func TestOptionsProxy_Exist(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -322,7 +322,7 @@ func TestOptionsProxy_Exist(t *testing.T) {
 
 func TestOptionsProxy_SetData_pathErr(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -342,7 +342,7 @@ func TestOptionsProxy_SetData_pathErr(t *testing.T) {
 
 func TestOptionsProxy_SetData(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -368,7 +368,7 @@ func TestOptionsProxy_SetData(t *testing.T) {
 
 func TestOptionsProxy_GetNodeData(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -392,7 +392,7 @@ func TestOptionsProxy_GetNodeData(t *testing.T) {
 
 func TestOptionsProxy_GetChildren(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -414,7 +414,7 @@ func TestOptionsProxy_GetChildren(t *testing.T) {
 
 func TestOptionsProxy_Delete(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -437,7 +437,7 @@ func TestOptionsProxy_Delete(t *testing.T) {
 
 func TestOptionsProxy_Delete_PathErr(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: NAME,
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -460,7 +460,7 @@ func TestOptionsProxy_Delete_PathErr(t *testing.T) {
 
 func TestAll(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: "mm",
 		// Addr: []string{testZkClientAddr},
 		Addr:           []string{ADDR},
@@ -526,7 +526,7 @@ func TestAll(t *testing.T) {
 
 // 监视子节点
 func TestZkChildNodeWatcher(t *testing.T) {
-	o := Option{
+	o := Config{
 		Name: "cc",
 		Addr: []string{ADDR},
 		//Addr:           []string{"localhost:2181"},
@@ -615,7 +615,7 @@ func TestZkChildNodeWatcher(t *testing.T) {
 
 func TestZkChildNodeWatcher_02(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: "cc11",
 		Addr: []string{ADDR},
 		// Addr:           []string{"localhost:2181"},
@@ -650,7 +650,7 @@ func TestZkChildNodeWatcher_02(t *testing.T) {
 
 func TestZkChildNodeWatcher_03(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name: "cc",
 		Addr: []string{ADDR},
 		//Addr:           []string{"localhost:2181"},
@@ -686,7 +686,7 @@ func TestZkChildNodeWatcher_03(t *testing.T) {
 // 测试临时节点的监听： 断开重连、断开恢复临时节点、断开恢复对临时节点的监听
 func TestZkNodeWatcher_EphemeralNode_EPHEMERAL_04(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name:           "cc1",
 		Addr:           []string{ADDR},
 		SessionTimeout: time.Second * 3,
@@ -760,7 +760,7 @@ func TestZkNodeWatcher_EphemeralNode_EPHEMERAL_04(t *testing.T) {
 // 对临时节点监听实时性测试
 func TestZkNodeWatcher_EphemeralNode_EPHEMERAL_05(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name:           "cc3",
 		Addr:           []string{ADDR},
 		SessionTimeout: time.Second * 3,
@@ -804,7 +804,7 @@ func TestZkNodeWatcher_EphemeralNode_EPHEMERAL_05(t *testing.T) {
 
 func TestZkNodeWatcher_Node_PERSISTENT_05(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name:           "cc4",
 		Addr:           []string{ADDR},
 		SessionTimeout: time.Second * 3,
@@ -872,7 +872,7 @@ func TestZkNodeWatcher_Node_PERSISTENT_05(t *testing.T) {
 
 func TestZkNodeWatcher_Node_PERSISTENT_06(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name:           "cc5",
 		Addr:           []string{ADDR},
 		SessionTimeout: time.Second * 3,
@@ -938,7 +938,7 @@ func TestZkNodeWatcher_Node_PERSISTENT_06(t *testing.T) {
 
 func TestZkNodeWatcher_Node_PERSISTENT_07(t *testing.T) {
 
-	o := Option{
+	o := Config{
 		Name:           "cc",
 		Addr:           []string{ADDR},
 		SessionTimeout: time.Second * 3,
@@ -957,7 +957,7 @@ func TestZkNodeWatcher_Node_PERSISTENT_07(t *testing.T) {
 }
 
 func TestWatchNodeData(t *testing.T) {
-	c, err := newZookeeperProxy(&Option{
+	c, err := newZookeeperProxy(&Config{
 		Name:           "cc",
 		Addr:           []string{ADDR},
 		SessionTimeout: time.Second * 3,

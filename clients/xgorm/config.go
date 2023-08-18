@@ -12,34 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package xxxljob
+package xgorm
 
 import (
-	"github.com/NetEase-Media/easy-ngo/xlog"
-	xxl "github.com/xxl-job/xxl-job-executor-go"
+	"time"
 )
 
-type XJobManager struct {
-	option *Option
-	xxl.Executor
+// mysql client configuration
+type Config struct {
+	Name            string
+	Type            string
+	Url             string
+	MaxIdleCons     int
+	MaxOpenCons     int
+	ConnMaxLifetime time.Duration
+	ConnMaxIdleTime time.Duration
+	EnableTracer    bool
 }
 
-func New(option *Option, log xlog.Logger) *XJobManager {
-	exec := xxl.NewExecutor(
-		xxl.ServerAddr(option.Addr),
-		xxl.AccessToken(option.Token),
-		xxl.ExecutorIp(option.ExecutorIP),
-		xxl.ExecutorPort(option.ExecutorPort),
-		xxl.RegistryKey(option.ExecutorName),
-	)
-	ret := &XJobManager{
-		option:   option,
-		Executor: exec,
+func DefaultConfig() *Config {
+	return &Config{
+		Name:            "default",
+		Type:            "mysql",
+		MaxIdleCons:     10,
+		MaxOpenCons:     10,
+		ConnMaxLifetime: time.Second * 1000,
+		ConnMaxIdleTime: time.Second * 60,
 	}
-	ret.Init()
-	// err := ret.Run()
-	// if err != nil {
-	// 	panic("xxxljob run error.")
-	// }
-	return ret
 }

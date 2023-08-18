@@ -15,12 +15,10 @@
 package xmemcache
 
 import (
-	"errors"
 	"time"
 )
 
-// Options 可配置的数据
-type Option struct {
+type Config struct {
 	Name         string        // 客户端名称，需要唯一
 	Timeout      time.Duration // 客户端连接超时时间
 	MaxIdleConns int           // 最大空闲连接
@@ -28,13 +26,6 @@ type Option struct {
 	EnableTracer bool
 }
 
-func defaultOption() *Option {
-	return &Option{}
-}
-
-func checkOptions(opt *Option) error {
-	if opt.Name == "" {
-		return errors.New("client name can not be nil")
-	}
-	return nil
+func DefaultConfig() *Config {
+	return &Config{}
 }

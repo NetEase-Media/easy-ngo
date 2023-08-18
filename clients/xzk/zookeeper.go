@@ -39,8 +39,7 @@ const (
 	Unknown                          EventType = -2
 )
 
-//
-func newZookeeperProxy(opt *Option) (*ZookeeperProxy, error) {
+func newZookeeperProxy(opt *Config) (*ZookeeperProxy, error) {
 	conn, ch, err := zk.Connect(opt.Addr, opt.SessionTimeout)
 	if err != nil {
 		return nil, fmt.Errorf("connection failed")
@@ -48,7 +47,7 @@ func newZookeeperProxy(opt *Option) (*ZookeeperProxy, error) {
 
 	var scene sync.Map
 	zp := &ZookeeperProxy{
-		Opt:      opt,
+		Config:   opt,
 		Conn:     conn,
 		listenCh: nil,
 		tmpNode:  scene,
