@@ -32,14 +32,20 @@ type Server struct {
 	config   *Config
 	listener net.Listener
 
-	httpMetrics *server.HttpMetrics
+	logger  xlog.Logger
+	metrics *server.HttpMetrics
 }
 
-func New(config *Config) *Server {
-	return &Server{
+func New(config *Config, logger xlog.Logger, metrics xmetrics.Provider) *Server {
+	s := &Server{
 		config: config,
 		Engine: gin.New(),
+		logger: logger,
 	}
+	if config.EnabledMetrics {
+		s.metrics = server.NewHttpMetrics(metrics, config.Metrics.Bucket)
+	}
+	return s
 }
 
 func (server *Server) Serve() error {
@@ -49,24 +55,23 @@ func (server *Server) Serve() error {
 	}
 	err := server.Server.Serve(server.listener)
 	if err != nil && err == http.ErrServerClosed {
-		xlog.Panicf("close gin[%s]", err)
+		server.logger.Panicf("close gin[%s]", err)
 		return nil
 	}
 	return nil
 }
 
 func (s *Server) Init() error {
-	if s.config.EnabledMetric {
-		s.httpMetrics = server.NewHttpMetrics()
-		s.httpMetrics.Init()
+	if s.config.EnabledMetrics {
+		s.metrics.Init()
 		s.Use(s.metricsMiddleware())
 	}
-	if s.config.EnabledTrace {
+	if s.config.EnabledTracer {
 		s.Use(s.traceMiddleware())
 	}
 	listener, err := net.Listen("tcp", s.Address())
 	if err != nil {
-		xlog.Panicf("gin Init error![%s]", err)
+		s.logger.Panicf("gin Init error![%s]", err)
 		return err
 	}
 	s.listener = listener
@@ -76,13 +81,13 @@ func (s *Server) Init() error {
 
 func (s *Server) metricsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if xmetrics.GetPath() == c.Request.URL.Path {
-			c.Next()
-			return
-		}
+		// if xmetrics.GetPath() == c.Request.URL.Path {
+		// 	c.Next()
+		// 	return
+		// }
 		start := time.Now()
 		c.Next()
-		s.httpMetrics.Record(server.HttpLabels{
+		s.metrics.Record(server.HttpLabels{
 			Url:    c.Request.URL.Path,
 			Method: c.Request.Method,
 			Code:   c.Writer.Status(),

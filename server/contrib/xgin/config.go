@@ -1,5 +1,7 @@
 package xgin
 
+import "github.com/NetEase-Media/easy-ngo/xmetrics"
+
 type MODE string
 
 const (
@@ -9,19 +11,28 @@ const (
 )
 
 type Config struct {
-	Host          string
-	Port          int
-	EnabledMetric bool
-	EnabledTrace  bool
-	Mode          MODE
+	Host           string
+	Port           int
+	EnabledMetrics bool
+	EnabledTracer  bool
+	Mode           MODE
+	Metrics        Metrics
+}
+
+type Metrics struct {
+	Bucket           xmetrics.Bucket
+	ExcludeByPrefix  []string
+	ExcludeByRegular []string
+	IncludeByPrefix  []string
+	IncludeByRegular []string
 }
 
 func DefaultConfig() *Config {
 	return &Config{
-		Host:          "0.0.0.0",
-		Port:          8080,
-		EnabledMetric: false,
-		EnabledTrace:  false,
-		Mode:          DEBUG,
+		Host:           "0.0.0.0",
+		Port:           8080,
+		EnabledMetrics: false,
+		EnabledTracer:  false,
+		Mode:           DEBUG,
 	}
 }

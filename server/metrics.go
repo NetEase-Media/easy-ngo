@@ -23,6 +23,8 @@ var (
 )
 
 type HttpMetrics struct {
+	metrics xmetrics.Provider
+	bucket  xmetrics.Bucket
 }
 
 type HttpLabels struct {
@@ -37,13 +39,16 @@ func (httpMetrics *HttpMetrics) Record(labels HttpLabels, start time.Time, end t
 	requestDuration.With(LABELDOMAIN, labels.Domain, LABELURL, labels.Url, LABELMETHOD, labels.Method, LABELCODE).Observe(float64((end.Nanosecond() - start.Nanosecond()) / 1e6))
 }
 
-func NewHttpMetrics() *HttpMetrics {
-	return &HttpMetrics{}
+func NewHttpMetrics(metrics xmetrics.Provider, bucket xmetrics.Bucket) *HttpMetrics {
+	return &HttpMetrics{
+		metrics: metrics,
+		bucket:  bucket,
+	}
 }
 
 func (httpMetrics *HttpMetrics) Init() {
-	requestTotal = xmetrics.NewCounter(metricRequestTotal, LABELDOMAIN, LABELURL, LABELMETHOD, LABELCODE)
-	requestDuration = xmetrics.NewHistogram(metricRequestDuration, httpMetrics.exponentialBuckets(10, 10, 5), LABELDOMAIN, LABELURL, LABELMETHOD, LABELCODE)
+	requestTotal = httpMetrics.metrics.NewCounter(metricRequestTotal, LABELDOMAIN, LABELURL, LABELMETHOD, LABELCODE)
+	requestDuration = httpMetrics.metrics.NewHistogram(metricRequestDuration, httpMetrics.exponentialBuckets(httpMetrics.bucket.Start, httpMetrics.bucket.Factor, httpMetrics.bucket.Count), LABELDOMAIN, LABELURL, LABELMETHOD, LABELCODE)
 }
 
 func (httpMetrics *HttpMetrics) exponentialBuckets(start, factor float64, count int) []float64 {

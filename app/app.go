@@ -6,16 +6,16 @@ import (
 	"sync"
 	"time"
 
+	xmetrics "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xmetrics"
+
 	conf "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_config"
+	xlog "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xlog"
 	"github.com/NetEase-Media/easy-ngo/config"
 	"github.com/NetEase-Media/easy-ngo/signals"
 	"github.com/NetEase-Media/easy-ngo/utils"
 	"github.com/NetEase-Media/easy-ngo/utils/xgo"
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap"
-	"github.com/NetEase-Media/easy-ngo/xmetrics"
 	"github.com/NetEase-Media/easy-ngo/xmetrics/contrib/xprometheus"
-	"github.com/NetEase-Media/easy-ngo/xtracer"
 	"github.com/fatih/color"
 	"golang.org/x/sync/errgroup"
 
@@ -169,12 +169,12 @@ func (app *App) Shutdown() (err error) {
 }
 
 func (app *App) initTracer() error {
-	tracerConfig := xtracer.DefaultConfig()
-	if err := conf.UnmarshalKey("tracer", tracerConfig); err != nil {
-		return err
-	}
-	provider := xtracer.New(tracerConfig)
-	xtracer.WithVendor(provider)
+	// tracerConfig := xtracer.DefaultConfig()
+	// if err := conf.UnmarshalKey("tracer", tracerConfig); err != nil {
+	// 	return err
+	// }
+	// provider := xtracer.New(tracerConfig)
+	// xtracer.WithVendor(provider)
 	return nil
 }
 

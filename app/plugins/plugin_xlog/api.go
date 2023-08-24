@@ -33,3 +33,7 @@ func Panicf(msg string, params ...interface{}) {
 func WithVendor(log logger.Logger) {
 	xlog = log
 }
+
+func GetLogger() logger.Logger {
+	return xlog
+}

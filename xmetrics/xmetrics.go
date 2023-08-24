@@ -35,8 +35,16 @@ type Histogram interface {
 type Provider interface {
 	NewCounter(name string, labelNames ...string) Counter
 	NewGauge(name string, labelNames ...string) Gauge
-	NewHistogram(name string, buckets []float64, labelNames ...string) Histogram
+	NewHistogram(name string, bucket []float64, labelNames ...string) Histogram
+}
+
+type Server interface {
 	Stop() error
 	Start() error
 	GetPath() string
+}
+
+type Bucket struct {
+	Start, Factor float64
+	Count         int
 }

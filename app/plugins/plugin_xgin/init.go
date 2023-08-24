@@ -5,6 +5,8 @@ import (
 
 	"github.com/NetEase-Media/easy-ngo/app"
 	config "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_config"
+	xlog "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xlog"
+	xmetrics "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xmetrics"
 	"github.com/NetEase-Media/easy-ngo/server/contrib/xgin"
 )
 
@@ -19,7 +21,11 @@ func Initialize(ctx context.Context) error {
 	if err := config.UnmarshalKey("server", c); err != nil {
 		return err
 	}
-	WithServer(xgin.New(c))
+	if c.EnabledMetrics {
+		WithServer(xgin.New(c, xlog.GetLogger(), xmetrics.GetProvider()))
+	} else {
+		WithServer(xgin.New(c, xlog.GetLogger(), nil))
+	}
 	return GetServer().Init()
 }
 
