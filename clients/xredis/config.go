@@ -21,7 +21,7 @@ import (
 )
 
 // Options 是redis客户端的通用配置选项，兼容单实例和cluster类型。
-type Option struct {
+type Config struct {
 	// 用户需要保证名字唯一
 	Name string
 
@@ -67,15 +67,14 @@ type Option struct {
 	IdleCheckFrequency time.Duration
 
 	// TODO: 未来增加
-	TLSConfig    *tls.Config
-	EnableTracer bool
+	TLSConfig *tls.Config
 }
 
-func NewDefaultOptions() *Option {
-	return &Option{}
+func DefaultConfig() *Config {
+	return &Config{}
 }
 
-func checkOptions(opt *Option) error {
+func checkConfig(opt *Config) error {
 	if opt.Name == "" {
 		return errors.New("client name can not be nil")
 	}

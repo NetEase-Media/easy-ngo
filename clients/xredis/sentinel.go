@@ -15,13 +15,10 @@
 package xredis
 
 import (
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/go-redis/redis/v8"
 )
 
-func newSentinelOptions(opt *Option) *redis.FailoverOptions {
+func newSentinelOptions(opt *Config) *redis.FailoverOptions {
 	return &redis.FailoverOptions{
 		MasterName:         opt.MasterNames[0],
 		SentinelAddrs:      opt.Addr,
@@ -44,21 +41,12 @@ func newSentinelOptions(opt *Option) *redis.FailoverOptions {
 	}
 }
 
-func NewSentinelClient(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) *RedisContainer {
+func NewSentinelClient(opt *Config) *RedisContainer {
 	baseClient := redis.NewFailoverClient(newSentinelOptions(opt))
 	c := &RedisContainer{
 		Redis:     baseClient,
 		Opt:       *opt,
 		redisType: RedisTypeSentinel,
-		logger:    logger,
-		metrics:   metrics,
-		tracer:    tracer,
 	}
-	// baseClient.AddHook(newMetricHook(c))
-	if metrics != nil {
-		metricsHook := newMetricHook(c, logger, metrics)
-		baseClient.AddHook(metricsHook)
-	}
-	// baseClient.AddHook(newTracingHook(c))
 	return c
 }

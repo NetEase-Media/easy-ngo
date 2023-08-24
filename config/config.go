@@ -11,10 +11,9 @@ type Config struct {
 }
 
 func New() *Config {
-	config = &Config{
+	return &Config{
 		protocols: make(map[string]string),
 	}
-	return config
 }
 
 func (c *Config) Init() error {

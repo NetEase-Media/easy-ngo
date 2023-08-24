@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/NetEase-Media/easy-ngo/app"
+	config "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_config"
 	"github.com/NetEase-Media/easy-ngo/clients/xgorm"
-	"github.com/NetEase-Media/easy-ngo/config"
 )
 
 func init() {

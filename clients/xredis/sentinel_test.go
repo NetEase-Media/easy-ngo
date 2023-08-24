@@ -22,7 +22,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +29,7 @@ func TestSentinelClient(t *testing.T) {
 	// 有外部依赖，先忽略
 	t.Skip()
 	ctx := context.Background()
-	client := NewSentinelClient(&Option{
+	client := NewSentinelClient(&Config{
 		Name:         "sharedsentinel01",
 		ConnType:     "sentinel",
 		MasterNames:  []string{"sentinel6510"},
@@ -40,7 +39,7 @@ func TestSentinelClient(t *testing.T) {
 		DialTimeout:  60 * time.Second,
 		ReadTimeout:  60 * time.Second,
 		WriteTimeout: 60 * time.Second,
-	}, &xfmt.XFmt{}, nil, nil)
+	})
 	defer client.Close()
 
 	var wg sync.WaitGroup
@@ -61,7 +60,7 @@ func BenchmarkSentinelClient_Set(b *testing.B) {
 	// 有外部依赖，先忽略
 	b.Skip()
 	ctx := context.Background()
-	client := NewSentinelClient(&Option{
+	client := NewSentinelClient(&Config{
 		Name:         "sharedsentinel01",
 		ConnType:     "sentinel",
 		MasterNames:  []string{"sentinel6510"},
@@ -71,7 +70,7 @@ func BenchmarkSentinelClient_Set(b *testing.B) {
 		DialTimeout:  60 * time.Second,
 		ReadTimeout:  60 * time.Second,
 		WriteTimeout: 60 * time.Second,
-	}, &xfmt.XFmt{}, nil, nil)
+	})
 	defer client.Close()
 
 	b.ResetTimer()

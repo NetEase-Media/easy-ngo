@@ -15,13 +15,10 @@
 package xredis
 
 import (
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/go-redis/redis/v8"
 )
 
-func newClusterOptions(opt *Option) *redis.ClusterOptions {
+func newClusterOptions(opt *Config) *redis.ClusterOptions {
 	return &redis.ClusterOptions{
 		Addrs:              opt.Addr,
 		Username:           opt.Username,
@@ -42,21 +39,12 @@ func newClusterOptions(opt *Option) *redis.ClusterOptions {
 	}
 }
 
-func NewClusterClient(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) *RedisContainer {
+func NewClusterClient(opt *Config) *RedisContainer {
 	baseClient := redis.NewClusterClient(newClusterOptions(opt))
 	c := &RedisContainer{
 		Redis:     baseClient,
 		Opt:       *opt,
 		redisType: RedisTypeCluster,
-		logger:    logger,
-		metrics:   metrics,
-		tracer:    tracer,
 	}
-	// baseClient.AddHook(newMetricHook(c))
-	if metrics != nil {
-		metricsHook := newMetricHook(c, logger, metrics)
-		baseClient.AddHook(metricsHook)
-	}
-	// baseClient.AddHook(newTracingHook(c))
 	return c
 }

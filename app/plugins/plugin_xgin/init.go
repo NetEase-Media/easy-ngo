@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/NetEase-Media/easy-ngo/app"
-	"github.com/NetEase-Media/easy-ngo/config"
+	config "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_config"
 	"github.com/NetEase-Media/easy-ngo/server/contrib/xgin"
 )
 

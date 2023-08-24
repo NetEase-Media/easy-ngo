@@ -20,7 +20,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/alicebob/miniredis"
 	"github.com/go-redis/redis/v8"
 	"github.com/stretchr/testify/assert"
@@ -38,11 +37,11 @@ func newTestClientWrapper() *testClientWrapper {
 	if err != nil {
 		panic(err)
 	}
-	opt := &Option{
+	opt := &Config{
 		Addr: []string{w.server.Addr()},
 		Name: "test client",
 	}
-	w.client = NewClient(opt, &xfmt.XFmt{}, nil, nil)
+	w.client = NewClient(opt)
 	return &w
 }
 
