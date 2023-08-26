@@ -32,18 +32,16 @@ type Server struct {
 	config   *Config
 	listener net.Listener
 
-	logger  xlog.Logger
 	metrics *server.HttpMetrics
 }
 
-func New(config *Config, logger xlog.Logger, metrics xmetrics.Provider) *Server {
+func New(config *Config) *Server {
 	s := &Server{
 		config: config,
 		Engine: gin.New(),
-		logger: logger,
 	}
 	if config.EnabledMetrics {
-		s.metrics = server.NewHttpMetrics(metrics, config.Metrics.Bucket)
+		s.metrics = server.NewHttpMetrics(xmetrics.GetProvider(), config.Metrics.Bucket)
 	}
 	return s
 }
@@ -55,7 +53,7 @@ func (server *Server) Serve() error {
 	}
 	err := server.Server.Serve(server.listener)
 	if err != nil && err == http.ErrServerClosed {
-		server.logger.Panicf("close gin[%s]", err)
+		xlog.Panicf("close gin[%s]", err)
 		return nil
 	}
 	return nil
@@ -71,7 +69,7 @@ func (s *Server) Init() error {
 	}
 	listener, err := net.Listen("tcp", s.Address())
 	if err != nil {
-		s.logger.Panicf("gin Init error![%s]", err)
+		xlog.Panicf("gin Init error![%s]", err)
 		return err
 	}
 	s.listener = listener

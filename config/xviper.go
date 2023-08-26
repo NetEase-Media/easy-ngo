@@ -1,4 +1,4 @@
-package xviper
+package config
 
 import (
 	"strings"
@@ -7,28 +7,37 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	EnvConfigSourceName  = "env"
+	FileConfigSourceName = "file"
+)
+
 type XViper struct {
 	viper *viper.Viper
 }
 
-func New() *XViper {
+func New() Config {
 	return &XViper{
 		viper: viper.New(),
 	}
 }
 
-func (xviper *XViper) Init(protocol string) error {
-	scheme := protocol[:strings.Index(protocol, "://")]
-	switch scheme {
-	case "env":
-		initEnv(protocol[strings.Index(protocol, "://")+3:])
-	case "file":
-		initFile(protocol[strings.Index(protocol, "://")+3:])
+func (xviper *XViper) Init(protocols ...string) error {
+	for _, protocol := range protocols {
+		scheme := protocol[:strings.Index(protocol, "://")]
+		switch scheme {
+		case EnvConfigSourceName:
+			xviper.initEnv(protocol[strings.Index(protocol, "://")+3:])
+		case FileConfigSourceName:
+			if err := xviper.initFile(protocol[strings.Index(protocol, "://")+3:]); err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
 
-func initEnv(protocol string) {
+func (xviper *XViper) initEnv(protocol string) {
 	kvs := strings.Split(protocol, ";")
 	for _, kv := range kvs {
 		if strings.HasPrefix(kv, "prefix=") {
@@ -38,7 +47,7 @@ func initEnv(protocol string) {
 	xviper.viper.AutomaticEnv()
 }
 
-func initFile(protocol string) {
+func (xviper *XViper) initFile(protocol string) error {
 	kvs := strings.Split(protocol, ";")
 	for _, kv := range kvs {
 		if strings.HasPrefix(kv, "name=") {
@@ -52,9 +61,6 @@ func initFile(protocol string) {
 			}
 		}
 	}
-}
-
-func (xviper *XViper) Read() error {
 	return xviper.viper.ReadInConfig()
 }
 

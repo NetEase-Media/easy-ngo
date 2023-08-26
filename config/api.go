@@ -1,12 +1,10 @@
-package pluginconfig
+package config
 
 import (
 	"time"
-
-	conf "github.com/NetEase-Media/easy-ngo/config"
 )
 
-var config *conf.Config
+var config Config
 
 func GetString(key string) string {
 	return config.GetString(key)
@@ -32,6 +30,6 @@ func UnmarshalKey(key string, rawVal interface{}) error {
 	return config.UnmarshalKey(key, &rawVal)
 }
 
-func WithConfig(c *conf.Config) {
+func WithConfig(c Config) {
 	config = c
 }

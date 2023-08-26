@@ -41,7 +41,6 @@ type Provider interface {
 type Server interface {
 	Stop() error
 	Start() error
-	GetPath() string
 }
 
 type Bucket struct {

@@ -15,8 +15,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-
-	"github.com/NetEase-Media/easy-ngo/xlog"
 )
 
 // 此处Tracer使用otel的API作为标准来实现
@@ -113,7 +111,7 @@ func WithTextMapPropagator(propagator propagation.TextMapPropagator) {
 func newStdoutExporter() sdktrace.SpanExporter {
 	exp, err := stdouttrace.New()
 	if err != nil {
-		xlog.Errorf("failed to initialize stdout trace exporter %v", err)
+		// xlog.Errorf("failed to initialize stdout trace exporter %v", err)
 	}
 	return exp
 }
@@ -121,7 +119,7 @@ func newStdoutExporter() sdktrace.SpanExporter {
 func newJaegerExporter(url string) sdktrace.SpanExporter {
 	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
 	if err != nil {
-		xlog.Errorf("failed to initialize jaeger trace exporter %v", err)
+		// xlog.Errorf("failed to initialize jaeger trace exporter %v", err)
 	}
 	return exp
 }
@@ -134,11 +132,11 @@ func newOtlpExporter(url string) sdktrace.SpanExporter {
 		grpc.WithBlock(),
 	)
 	if err != nil {
-		xlog.Errorf("failed to create gRPC connection to collector: %v", err)
+		// xlog.Errorf("failed to create gRPC connection to collector: %v", err)
 	}
 	exp, err := otlp.New(ctx, otlp.WithGRPCConn(conn))
 	if err != nil {
-		xlog.Errorf("failed to create the collector exporter: %v", err)
+		// xlog.Errorf("failed to create the collector exporter: %v", err)
 	}
 	return exp
 }

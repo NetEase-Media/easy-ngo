@@ -6,10 +6,9 @@ import (
 	"sync"
 	"time"
 
-	xmetrics "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xmetrics"
+	"github.com/NetEase-Media/easy-ngo/xlog"
+	"github.com/NetEase-Media/easy-ngo/xmetrics"
 
-	conf "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_config"
-	xlog "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xlog"
 	"github.com/NetEase-Media/easy-ngo/config"
 	"github.com/NetEase-Media/easy-ngo/signals"
 	"github.com/NetEase-Media/easy-ngo/utils"
@@ -18,8 +17,6 @@ import (
 	"github.com/NetEase-Media/easy-ngo/xmetrics/contrib/xprometheus"
 	"github.com/fatih/color"
 	"golang.org/x/sync/errgroup"
-
-	_ "github.com/NetEase-Media/easy-ngo/config/contrib/xviper"
 )
 
 const (
@@ -180,40 +177,35 @@ func (app *App) initTracer() error {
 
 func (app *App) initMetrics() error {
 	metricsConfig := xprometheus.DefaultConfig()
-	if err := conf.UnmarshalKey("metrics", metricsConfig); err != nil {
+	if err := config.UnmarshalKey("metrics", metricsConfig); err != nil {
 		return err
 	}
 	provider := xprometheus.NewProvider(metricsConfig)
-	go provider.Start()
 	xmetrics.WithVendor(provider)
+	server := xprometheus.NewServer(metricsConfig)
+	go server.Start()
 	return nil
 }
 
 func (app *App) initLogger() error {
 	logConfig := xzap.DefaultConfig()
-	if err := conf.UnmarshalKey("logger", logConfig); err != nil {
+	if err := config.UnmarshalKey("logger", logConfig); err != nil {
 		return err
 	}
-	xzap, _ := xzap.New(logConfig)
+	xzap, err := xzap.New(logConfig)
+	if err != nil {
+		return err
+	}
 	xlog.WithVendor(xzap)
 	return nil
 }
 
 func (app *App) initConfig() error {
-	c := config.New()
-	defer conf.WithConfig(c)
-	for _, configName := range GetConfigNames() {
-		c.AddProtocol(configName)
-	}
-	var err error
-	err = c.Init()
-	if err != nil {
+	conf := config.New()
+	if err := conf.Init(GetConfigProtocols()...); err != nil {
 		return err
 	}
-	err = c.ReadConfig()
-	if err != nil {
-		return err
-	}
+	config.WithConfig(conf)
 	return nil
 }
 

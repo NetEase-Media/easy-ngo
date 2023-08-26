@@ -1,10 +1,6 @@
-package pluginxlog
+package xlog
 
-import (
-	logger "github.com/NetEase-Media/easy-ngo/xlog"
-)
-
-var xlog logger.Logger
+var xlog Logger
 
 func Debugf(msg string, params ...interface{}) {
 	xlog.Debugf(msg, params...)
@@ -30,10 +26,6 @@ func Panicf(msg string, params ...interface{}) {
 	xlog.Panicf(msg, params...)
 }
 
-func WithVendor(log logger.Logger) {
+func WithVendor(log Logger) {
 	xlog = log
-}
-
-func GetLogger() logger.Logger {
-	return xlog
 }

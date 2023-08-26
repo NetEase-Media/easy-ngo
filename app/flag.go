@@ -7,7 +7,7 @@ import (
 
 type arrayFlags []string
 
-var configNames arrayFlags
+var configProtocols arrayFlags
 
 func (s *arrayFlags) Set(value string) error {
 	*s = append(*s, value)
@@ -19,10 +19,10 @@ func (s *arrayFlags) String() string {
 }
 
 func parse() {
-	flag.Var(&configNames, "c", "Config file list!")
+	flag.Var(&configProtocols, "c", "Config file list!")
 	flag.Parse()
 }
 
-func GetConfigNames() []string {
-	return configNames
+func GetConfigProtocols() []string {
+	return configProtocols
 }
