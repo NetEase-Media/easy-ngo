@@ -21,7 +21,7 @@ import (
 	"time"
 
 	"github.com/IBM/sarama"
-	xlog "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xlog"
+	"github.com/NetEase-Media/easy-ngo/xlog"
 )
 
 type ConsumerMessage struct {

@@ -3,7 +3,6 @@ module github.com/NetEase-Media/easy-ngo
 go 1.18
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/IBM/sarama v1.41.0
 	github.com/alicebob/miniredis v2.5.0+incompatible
 	github.com/bradfitz/gomemcache v0.0.0-20230611145640-acc696258285

@@ -25,6 +25,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/djimenez/iconv-go"
 	"github.com/valyala/fasthttp"
 )
@@ -293,7 +294,7 @@ func (df *DataFlow) send(res *fasthttp.Response) (err error) {
 func (df *DataFlow) doInternal() (statusCode int, err error) {
 	// var stats *httpclient.StatsHolder
 	defer func() {
-		df.release()
+		// df.release()
 		// 清空，防止垃圾和重复使用
 		df.reset()
 	}()

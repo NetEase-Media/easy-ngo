@@ -18,8 +18,8 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-func newClientOptions(opt *Config) *redis.Config {
-	return &redis.Config{
+func newClientOptions(opt *Config) *redis.Options {
+	return &redis.Options{
 		Addr:               opt.Addr[0],
 		Username:           opt.Username,
 		Password:           opt.Password,

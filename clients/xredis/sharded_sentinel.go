@@ -138,7 +138,7 @@ func (ssc *ShardedSentinelClient) listen(ctx context.Context) {
 	}
 }
 
-func sentinelOptions(opt *Option, addr string) *redis.Options {
+func sentinelOptions(opt *Config, addr string) *redis.Options {
 	return &redis.Options{
 		Addr:               addr,
 		DB:                 0,
