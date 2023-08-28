@@ -1,0 +1,4 @@
+[app]
+name = "test"
+version = "v1.0.0"
+port = 8080

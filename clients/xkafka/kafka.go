@@ -14,27 +14,11 @@
 
 package xkafka
 
-import (
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-	"github.com/NetEase-Media/easy-ngo/xlog"
-	"github.com/Shopify/sarama"
-)
-
 const (
 	defaultVersion = "2.1.0"
 )
 
-func init() {
-	sarama.Logger = NewLogger()
-}
-
-func New(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) (*Kafka, error) {
-	if err := checkOptions(opt); err != nil {
-		return nil, err
-	}
-
-	opt.fulfill()
+func New(opt *Config) (*Kafka, error) {
 
 	k := &Kafka{
 		Opt: opt,
@@ -42,14 +26,14 @@ func New(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer trace
 	hasProducer := true // TODO default must have a producer
 	hasConsumer := opt.Consumer.Group != ""
 	if hasProducer {
-		p, err := NewProducer(opt, logger, metrics, tracer)
+		p, err := NewProducer(opt)
 		if err != nil {
 			return nil, err
 		}
 		k.Producer = p
 	}
 	if hasConsumer {
-		co, err := NewConsumer(opt, logger, metrics, tracer)
+		co, err := NewConsumer(opt)
 		if err != nil {
 			return nil, err
 		}
@@ -59,7 +43,7 @@ func New(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer trace
 }
 
 type Kafka struct {
-	Opt      *Option
+	Opt      *Config
 	Consumer *Consumer
 	Producer *Producer
 }

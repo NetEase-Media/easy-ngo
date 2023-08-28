@@ -20,15 +20,14 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestProducerSend(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
-	p, err := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	p, err := NewProducer(opts)
 	assert.NoError(t, err)
 	defer p.Close()
 
@@ -47,24 +46,24 @@ func TestProducerSend(t *testing.T) {
 
 // 版本数据异常
 func TestProducerSend_KafkaVersion_Exception(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = "1.0"
-	_, err := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	_, err := NewProducer(opts)
 	assert.Error(t, err)
 	opts.Version = "0.0.a.0"
-	_, err1 := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	_, err1 := NewProducer(opts)
 	assert.Error(t, err1)
 	opts.Version = "1.0.a.0"
-	_, err2 := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	_, err2 := NewProducer(opts)
 	assert.Error(t, err2)
 }
 
 func TestCloseProducerSend(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
-	p, _ := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	p, _ := NewProducer(opts)
 	p.SyncSend(context.Background(), "ngo-kafka-test-produce", "test-ahah-SyncSend")
 	p.Close()
 	//同步发送消息
@@ -86,9 +85,9 @@ func TestCloseProducerSend(t *testing.T) {
 }*/
 
 func BenchmarkProducerSend(b *testing.B) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{"kafka:9092"}
-	p, err := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	p, err := NewProducer(opts)
 	assert.NoError(b, err)
 	p.run()
 	defer p.Close()

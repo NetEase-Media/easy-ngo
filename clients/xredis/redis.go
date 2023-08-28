@@ -18,9 +18,6 @@ import (
 	"errors"
 	"io"
 
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/go-redis/redis/v8"
 )
 
@@ -36,12 +33,12 @@ type Redis interface {
 	io.Closer
 }
 
-func New(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) (*RedisContainer, error) {
-	return newWithOption(opt, logger, metrics, tracer)
+func New(opt *Config) (*RedisContainer, error) {
+	return newWithConfig(opt)
 }
 
-func newWithOption(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) (*RedisContainer, error) {
-	if err := checkOptions(opt); err != nil {
+func newWithConfig(opt *Config) (*RedisContainer, error) {
+	if err := checkConfig(opt); err != nil {
 		return nil, err
 	}
 
@@ -49,21 +46,21 @@ func newWithOption(opt *Option, logger xlog.Logger, metrics metrics.Provider, tr
 	// 判断连接类型
 	switch opt.ConnType {
 	case RedisTypeClient:
-		c = NewClient(opt, logger, metrics, tracer)
+		c = NewClient(opt)
 	case RedisTypeCluster:
-		c = NewClusterClient(opt, logger, metrics, tracer)
+		c = NewClusterClient(opt)
 	case RedisTypeSentinel:
 		if len(opt.MasterNames) == 0 {
 			err := errors.New("empty master name")
 			return nil, err
 		}
-		c = NewSentinelClient(opt, logger, metrics, tracer)
+		c = NewSentinelClient(opt)
 	case RedisTypeShardedSentinel:
 		if len(opt.MasterNames) == 0 {
 			err := errors.New("empty master name")
 			return nil, err
 		}
-		c = NewShardedSentinelClient(opt, logger, metrics, tracer)
+		c = NewShardedSentinelClient(opt)
 	default:
 		err := errors.New("redis connection type need ")
 		return nil, err
@@ -75,9 +72,6 @@ func newWithOption(opt *Option, logger xlog.Logger, metrics metrics.Provider, tr
 // RedisContainer 用来存储redis客户端及其额外信息
 type RedisContainer struct {
 	Redis
-	Opt       Option
+	Opt       Config
 	redisType string
-	logger    xlog.Logger
-	metrics   metrics.Provider
-	tracer    tracer.Provider
 }

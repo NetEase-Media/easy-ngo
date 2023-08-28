@@ -21,13 +21,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/go-redis/redis/v8"
 )
 
-func NewShardedSentinelClient(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) *RedisContainer {
+func NewShardedSentinelClient(opt *Config) *RedisContainer {
 	sentinels := make(map[string]*redis.SentinelClient, len(opt.Addr))
 	masterAddrs := make(map[string]string, len(opt.Addr))
 	ssc := &ShardedSentinelClient{
@@ -70,7 +67,7 @@ func NewShardedSentinelClient(opt *Option, logger xlog.Logger, metrics metrics.P
 		sis = append(sis, &ShardInfo{
 			id:     name,
 			name:   shardName,
-			client: NewClient(tmp, logger, metrics, tracer),
+			client: NewClient(tmp),
 			weight: 1,
 		})
 	}
@@ -80,9 +77,6 @@ func NewShardedSentinelClient(opt *Option, logger xlog.Logger, metrics metrics.P
 		Redis:     baseClient,
 		Opt:       *opt,
 		redisType: RedisTypeShardedSentinel,
-		logger:    logger,
-		metrics:   metrics,
-		tracer:    tracer,
 	}
 	ssc.c = c
 	go ssc.listen(ctx)
@@ -90,7 +84,7 @@ func NewShardedSentinelClient(opt *Option, logger xlog.Logger, metrics metrics.P
 }
 
 type ShardedSentinelClient struct {
-	opt         *Option
+	opt         *Config
 	sentinels   map[string]*redis.SentinelClient
 	masterNames []string
 	masterAddrs map[string]string
@@ -132,7 +126,7 @@ func (ssc *ShardedSentinelClient) listen(ctx context.Context) {
 					client.ChangeShardInfo(masterName, &ShardInfo{
 						id:     masterName,
 						name:   shardName,
-						client: NewClient(clientOptions(ssc.opt, addr), ssc.c.logger, ssc.c.metrics, ssc.c.tracer),
+						client: NewClient(clientOptions(ssc.opt, addr)),
 						weight: 1,
 					})
 					// xlog.Infof("sentinel: switch master \"%v\"", msg.Payload)
@@ -144,7 +138,7 @@ func (ssc *ShardedSentinelClient) listen(ctx context.Context) {
 	}
 }
 
-func sentinelOptions(opt *Option, addr string) *redis.Options {
+func sentinelOptions(opt *Config, addr string) *redis.Options {
 	return &redis.Options{
 		Addr:               addr,
 		DB:                 0,

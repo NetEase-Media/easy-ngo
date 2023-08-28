@@ -14,42 +14,42 @@
 
 package xmemcache
 
-import (
-	"context"
+// import (
+// 	"context"
 
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/codes"
-	semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
-	"go.opentelemetry.io/otel/trace"
-)
+// 	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
+// 	"go.opentelemetry.io/otel/attribute"
+// 	"go.opentelemetry.io/otel/codes"
+// 	semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
+// 	"go.opentelemetry.io/otel/trace"
+// )
 
-type tracingHook struct {
-}
+// type tracingHook struct {
+// }
 
-func NewTracingHook() *tracingHook {
-	return &tracingHook{}
-}
+// func NewTracingHook() *tracingHook {
+// 	return &tracingHook{}
+// }
 
-func (h *tracingHook) Before(ctx context.Context, operation string, args ...string) (context.Context, error) {
-	tr := tracer.GetTracer("memcache")
-	newCtx, sp := tr.Start(ctx, operation, tracer.WithSpanKind(trace.SpanKindClient))
-	sp.SetAttributes(
-		semconv.DBSystemKey.String("memcache"),
-		semconv.DBOperationKey.String(operation),
-		attribute.String("db.operation_first_args", args[0]),
-	)
-	return newCtx, nil
+// func (h *tracingHook) Before(ctx context.Context, operation string, args ...string) (context.Context, error) {
+// 	tr := tracer.GetTracer("memcache")
+// 	newCtx, sp := tr.Start(ctx, operation, tracer.WithSpanKind(trace.SpanKindClient))
+// 	sp.SetAttributes(
+// 		semconv.DBSystemKey.String("memcache"),
+// 		semconv.DBOperationKey.String(operation),
+// 		attribute.String("db.operation_first_args", args[0]),
+// 	)
+// 	return newCtx, nil
 
-}
+// }
 
-func (h *tracingHook) After(ctx context.Context, err error) {
-	span := tracer.SpanFromContext(ctx)
-	if span == nil {
-		return
-	}
-	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
-	}
-	span.End()
-}
+// func (h *tracingHook) After(ctx context.Context, err error) {
+// 	span := tracer.SpanFromContext(ctx)
+// 	if span == nil {
+// 		return
+// 	}
+// 	if err != nil {
+// 		span.SetStatus(codes.Error, err.Error())
+// 	}
+// 	span.End()
+// }

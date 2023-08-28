@@ -20,18 +20,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestInit(t *testing.T) {
-	opts := &Option{
+	opts := &Config{
 		Name:     "client1",
 		Addr:     []string{"127.0.0.1:2379"},
 		ConnType: "client",
 	}
 
-	client, err := newWithOption(opts, &xfmt.XFmt{}, nil, nil)
+	client, err := newWithConfig(opts)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"127.0.0.1:2379"}, client.Opt.Addr)
 	client.Close()

@@ -15,14 +15,8 @@
 package xgorm
 
 import (
-	"time"
-
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
-	"github.com/NetEase-Media/easy-ngo/xlog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 const (
@@ -32,36 +26,25 @@ const (
 // Client
 type Client struct {
 	*gorm.DB
-	opt     *Option
-	logger  xlog.Logger
-	metrics metrics.Provider
-	tracer  tracer.Provider
+	config *Config
 }
 
-func New(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) (*Client, error) {
-	return newWithOption(opt, logger, metrics, tracer)
-}
-
-func newWithOption(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) (*Client, error) {
-	cli := &Client{
-		opt:     opt,
-		logger:  logger,
-		metrics: metrics,
-		tracer:  tracer,
+func New(config *Config) *Client {
+	return &Client{
+		config: config,
 	}
-	return cli, cli.initialize()
 }
 
-func (cli *Client) initialize() error {
+func (cli *Client) Init() error {
 	var cfg gorm.Config
-	cfg.Logger = NewLogger(logger.Config{
-		SlowThreshold: 200 * time.Millisecond,
-	}, cli.logger)
+	// cfg.Logger = NewLogger(logger.Config{
+	// 	SlowThreshold: 200 * time.Millisecond,
+	// }, cli.logger)
 	var dialector gorm.Dialector
-	if cli.opt.Type == dbTypeMysql {
-		dialector = mysql.Open(cli.opt.Url)
+	if cli.config.Type == dbTypeMysql {
+		dialector = mysql.Open(cli.config.Url)
 	} else {
-		dialector = mysql.Open(cli.opt.Url)
+		dialector = mysql.Open(cli.config.Url)
 	}
 
 	db, err := gorm.Open(dialector, &cfg)
@@ -73,20 +56,20 @@ func (cli *Client) initialize() error {
 	if err != nil {
 		return err
 	}
-	myDB.SetMaxIdleConns(cli.opt.MaxIdleCons)
-	myDB.SetMaxOpenConns(cli.opt.MaxOpenCons)
-	myDB.SetConnMaxLifetime(cli.opt.ConnMaxLifetime)
-	myDB.SetConnMaxIdleTime(cli.opt.ConnMaxIdleTime)
+	myDB.SetMaxIdleConns(cli.config.MaxIdleCons)
+	myDB.SetMaxOpenConns(cli.config.MaxOpenCons)
+	myDB.SetConnMaxLifetime(cli.config.ConnMaxLifetime)
+	myDB.SetConnMaxIdleTime(cli.config.ConnMaxIdleTime)
 
-	if cli.metrics != nil {
-		plugin := newGormMetricsPlugin(true, cli.metrics)
-		db.Use(plugin)
-	}
+	// if cli.metrics != nil {
+	// 	plugin := newGormMetricsPlugin(true, cli.metrics)
+	// 	db.Use(plugin)
+	// }
 
 	// db.Use(newGormMetricsPlugin())
-	if cli.opt.EnableTracer {
-		db.Use(newGormTracerPlugin())
-	}
+	// if cli.opt.EnableTracer {
+	// 	db.Use(newGormTracerPlugin())
+	// }
 	cli.DB = db
 	return nil
 }

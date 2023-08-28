@@ -1,11 +1,11 @@
 // Copyright 2022 NetEase Media Technology（Beijing）Co., Ltd.
-//
+
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
+
 // 	http://www.apache.org/licenses/LICENSE-2.0
-//
+
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,8 +21,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
-	"github.com/Shopify/sarama"
+	"github.com/IBM/sarama"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -39,13 +38,13 @@ const (
 // 2个消费者消费，数据不会重复
 func TestConsumer_TwoConsumer(t *testing.T) {
 	topic := KAFKATOPICPREX + strconv.Itoa(int(time.Now().UnixNano()/1e6))
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.Group = "ngo"
-	c, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c, err := NewConsumer(opts)
 	assert.NoError(t, err)
-	c2, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c2, err := NewConsumer(opts)
 	var c1Count int64 = 0
 	var c2Count int64 = 0
 	c.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
@@ -61,7 +60,7 @@ func TestConsumer_TwoConsumer(t *testing.T) {
 	go c.Start()
 	go c2.Start()
 	time.Sleep(5 * time.Second)
-	p, err := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	p, err := NewProducer(opts)
 	assert.NoError(t, err)
 	defer p.Close()
 	i := 0
@@ -79,13 +78,13 @@ func TestConsumer_TwoConsumer(t *testing.T) {
 func TestConsumerEnabledAutoCommit(t *testing.T) {
 	topic := KAFKATOPICPREX + "autocommit-" + strconv.Itoa(int(time.Now().UnixNano()/1e6))
 	t.Logf("topic name: %s", topic)
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.Group = "ngo"
 	//手动提交commit
 	opts.Consumer.EnableAutoCommit = false
-	c, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	var c1Count int64 = 0
 	c.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
@@ -95,7 +94,7 @@ func TestConsumerEnabledAutoCommit(t *testing.T) {
 	}})
 	c.Start()
 	//生产消息
-	p, err := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	p, err := NewProducer(opts)
 	assert.NoError(t, err)
 	defer p.Close()
 	i := 0
@@ -107,7 +106,7 @@ func TestConsumerEnabledAutoCommit(t *testing.T) {
 	assert.Equal(t, int64(10), atomic.LoadInt64(&c1Count))
 	c.Stop()
 	//再次进行消费
-	c2, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c2, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	var c2Count int64 = 0
 	c2.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
@@ -125,7 +124,7 @@ func TestConsumerEnabledAutoCommit(t *testing.T) {
 func TestConsumerNotEnabledAutoCommit(t *testing.T) {
 	topic := KAFKATOPICPREX + "autocommit-" + strconv.Itoa(int(time.Now().UnixNano()/1e6))
 	t.Logf("topic name: %s", topic)
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	//消费后不手动提交
@@ -133,14 +132,14 @@ func TestConsumerNotEnabledAutoCommit(t *testing.T) {
 	opts.Consumer.InitialOffset = sarama.OffsetOldest
 	opts.Consumer.EnableAutoCommit = false
 	opts.Consumer.Group = "ngo"
-	c1, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c1, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	c1.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
 		//log.Info("c1:" + message.Value + "：" + strconv.Itoa(int(message.Partition)) + "，offset:" + strconv.Itoa(int(message.Offset)))
 	}})
 	c1.Start()
 	//生产5条消息
-	p, err := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	p, err := NewProducer(opts)
 	assert.NoError(t, err)
 	defer p.Close()
 	total := 5
@@ -153,7 +152,7 @@ func TestConsumerNotEnabledAutoCommit(t *testing.T) {
 	c1.Stop()
 	//消费后手动提交
 	//log.Info("opts.Consumer.EnableAutoCommit = false，模拟手动提交")
-	c2, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c2, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	var c2Count int64 = 0
 	c2.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
@@ -167,7 +166,7 @@ func TestConsumerNotEnabledAutoCommit(t *testing.T) {
 	c2.Stop()
 	//再次进行消费
 	//log.Info("验证队列中无可消费的消息")
-	c3, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c3, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	var c3Count int64 = 0
 	c3.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
@@ -185,12 +184,12 @@ func TestConsumerNotEnabledAutoCommit(t *testing.T) {
 func TestConsumerTwoGroup(t *testing.T) {
 	topic := KAFKATOPICPREX + strconv.Itoa(int(time.Now().UnixNano()/1e6))
 	t.Logf("topic name: %s", topic)
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.InitialOffset = sarama.OffsetOldest
 	opts.Consumer.Group = "test1"
-	c, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	var c1Count int64 = 0
 	c.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
@@ -198,7 +197,7 @@ func TestConsumerTwoGroup(t *testing.T) {
 		//log.Info("c1:" + message.Value + "：" + strconv.Itoa(int(message.Partition)) + "，offset:" + strconv.Itoa(int(message.Offset)))
 	}})
 	c.Start()
-	p, err := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	p, err := NewProducer(opts)
 	assert.NoError(t, err)
 	defer p.Close()
 	i := 0
@@ -211,7 +210,7 @@ func TestConsumerTwoGroup(t *testing.T) {
 	c.Stop()
 	timeStr := "test2"
 	opts.Consumer.Group = timeStr
-	c1, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c1, err := NewConsumer(opts)
 	var c2Count int64 = 0
 	c1.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
 		atomic.AddInt64(&c2Count, 1)
@@ -223,7 +222,7 @@ func TestConsumerTwoGroup(t *testing.T) {
 	c1.Stop()
 	//同组再次消费
 	opts.Consumer.Group = timeStr
-	c2, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c2, err := NewConsumer(opts)
 	var c3Count int64 = 0
 	c2.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
 		atomic.AddInt64(&c3Count, 1)
@@ -237,11 +236,11 @@ func TestConsumerTwoGroup(t *testing.T) {
 
 // 添加监听，topic为空
 func TestConsumerAddListenerTopicNil(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.Group = "ngo"
-	c0, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c0, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	assert.Panics(t, func() {
 		c0.AddListener("", &listener{func(message ConsumerMessage, ack *Acknowledgment) {
@@ -252,11 +251,11 @@ func TestConsumerAddListenerTopicNil(t *testing.T) {
 
 // AddListener listener=nil
 func TestConsumerAddListenerNil(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.Group = "ngo"
-	c0, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c0, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	assert.Panics(t, func() {
 		c0.AddListener(KAFKATOPICNORMAL, nil)
@@ -265,11 +264,11 @@ func TestConsumerAddListenerNil(t *testing.T) {
 
 // 启动panic验证
 func TestConsumerStart(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.Group = "ngo"
-	c0, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c0, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	assert.Panics(t, func() {
 		c0.AddListener(KAFKATOPICNORMAL, nil)
@@ -278,11 +277,11 @@ func TestConsumerStart(t *testing.T) {
 }
 
 func TestConsumerStartDup(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.Group = "ngo"
-	c0, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c0, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	c0.AddListener(KAFKATOPICNORMAL, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
 		//log.Info("c0:" + message.Value + "：" + strconv.Itoa(int(message.Partition)) + "，offset:" + strconv.Itoa(int(message.Offset)))
@@ -295,23 +294,23 @@ func TestConsumerStartDup(t *testing.T) {
 }
 
 func TestConsumerStopException(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = "0.2..3"
 	opts.Consumer.Group = "ngo"
 	//初始化失败
-	c0, _ := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c0, _ := NewConsumer(opts)
 	assert.Panics(t, func() {
 		c0.Stop()
 	}, "runtime error: invalid memory address or nil pointer dereference")
 }
 
 func TestConsumerStopCancelNotNil(t *testing.T) {
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.Group = "ngo"
-	c0, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c0, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	c0.AddListener(KAFKATOPICNORMAL, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
 		//log.Info("c0:" + message.Value + "：" + strconv.Itoa(int(message.Partition)) + "，offset:" + strconv.Itoa(int(message.Offset)))
@@ -323,11 +322,11 @@ func TestConsumerStopCancelNotNil(t *testing.T) {
 func TestConsumerListenerErr(t *testing.T) {
 	topic := KAFKATOPICPREX + strconv.Itoa(int(time.Now().UnixNano()/1e6))
 	println(topic)
-	opts := NewDefaultOptions()
+	opts := DefaultConfig()
 	opts.Addr = []string{KAFKAADDR}
 	opts.Version = KAFKAVERSION
 	opts.Consumer.Group = "ngo"
-	c, err := NewConsumer(opts, &xfmt.XFmt{}, nil, nil)
+	c, err := NewConsumer(opts)
 	assert.NoError(t, err)
 	var i int32 = 0
 	c.AddListener(topic, &listener{func(message ConsumerMessage, ack *Acknowledgment) {
@@ -339,7 +338,7 @@ func TestConsumerListenerErr(t *testing.T) {
 	}})
 	go c.Start()
 	time.Sleep(5 * time.Second)
-	p, err := NewProducer(opts, &xfmt.XFmt{}, nil, nil)
+	p, err := NewProducer(opts)
 	assert.NoError(t, err)
 	defer p.Close()
 	for j := 0; j < 50; j++ {

@@ -1,0 +1,142 @@
+package xtracer
+
+import (
+	"context"
+	"time"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	otlp "go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.16.0"
+	"go.opentelemetry.io/otel/trace"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+)
+
+// 此处Tracer使用otel的API作为标准来实现
+type Tracer = trace.Tracer
+
+// 重要，此接口必须实现
+// 依托实现的接口是TracerProvider
+// 第三方实现的Tracer必须实现Provider接口
+type Provider interface {
+	trace.TracerProvider
+}
+
+// otel/trace 包常量、类型、方法 快捷链接
+// otel/trace 常量
+const (
+	FlagsSampled        = trace.FlagsSampled
+	SpanKindUnspecified = trace.SpanKindUnspecified
+	SpanKindInternal    = trace.SpanKindInternal
+	SpanKindServer      = trace.SpanKindServer
+	SpanKindClient      = trace.SpanKindClient
+	SpanKindProducer    = trace.SpanKindProducer
+	SpanKindConsumer    = trace.SpanKindConsumer
+)
+
+// otel/trace interface
+type Span = trace.Span
+type SpanContext = trace.SpanContext
+
+// otel/trace  funcs
+var ContextWithRemoteSpanContext = trace.ContextWithRemoteSpanContext
+var ContextWithSpan = trace.ContextWithSpan
+var ContextWithSpanContext = trace.ContextWithSpanContext
+var LinkFromContext = trace.LinkFromContext
+var WithSpanKind = trace.WithSpanKind
+var WithAttributes = trace.WithAttributes
+var SpanFromContext = trace.SpanFromContext
+var SpanContextFromContext = trace.SpanContextFromContext
+
+// otel包 常量、类型、方法 快捷链接
+
+// otel types
+type ErrorHandler = otel.ErrorHandler
+type ErrorHandlerFunc = otel.ErrorHandlerFunc
+
+// 注意此函数改名
+var GetTracer = otel.Tracer
+
+// otel funcs
+var GetTracerProvider = otel.GetTracerProvider
+var SetTracerProvider = otel.SetTracerProvider
+var GetTextMapPropagator = otel.GetTextMapPropagator
+var SetTextMapPropagator = otel.SetTextMapPropagator
+var Handle = otel.Handle
+var GetErrorHandler = otel.GetErrorHandler
+var SetErrorHandler = otel.SetErrorHandler
+var SetLogger = otel.SetLogger
+var OtelVersion = otel.Version
+
+func New(config *Config) Provider {
+	var exp sdktrace.SpanExporter
+	switch config.ExporterName {
+	case EXPORTER_NAME_JAEGER:
+		exp = newJaegerExporter(config.ExporterEndpoint)
+	case EXPORTER_NAME_OLTP:
+		exp = newOtlpExporter(config.ExporterEndpoint)
+	default:
+		exp = newStdoutExporter()
+	}
+	return NewProvider(config, exp)
+}
+
+func NewProvider(config *Config, exp sdktrace.SpanExporter) Provider {
+	res := resource.NewSchemaless(
+		semconv.TelemetrySDKLanguageGo,
+		semconv.ServiceNameKey.String(config.ServiceName),
+	)
+	provider := sdktrace.NewTracerProvider(
+		// 设置导出exporter
+		sdktrace.WithBatcher(exp),
+		// 设置采样器
+		sdktrace.WithSampler(sdktrace.ParentBased(sdktrace.TraceIDRatioBased(config.SampleRate))),
+		sdktrace.WithResource(res),
+	)
+	otel.SetTracerProvider(provider)
+	// 设置全局的propagator
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	return provider
+}
+
+func WithTextMapPropagator(propagator propagation.TextMapPropagator) {
+	otel.SetTextMapPropagator(propagator)
+}
+
+func newStdoutExporter() sdktrace.SpanExporter {
+	exp, err := stdouttrace.New()
+	if err != nil {
+		// xlog.Errorf("failed to initialize stdout trace exporter %v", err)
+	}
+	return exp
+}
+
+func newJaegerExporter(url string) sdktrace.SpanExporter {
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	if err != nil {
+		// xlog.Errorf("failed to initialize jaeger trace exporter %v", err)
+	}
+	return exp
+}
+
+func newOtlpExporter(url string) sdktrace.SpanExporter {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	conn, err := grpc.DialContext(ctx, url,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
+	)
+	if err != nil {
+		// xlog.Errorf("failed to create gRPC connection to collector: %v", err)
+	}
+	exp, err := otlp.New(ctx, otlp.WithGRPCConn(conn))
+	if err != nil {
+		// xlog.Errorf("failed to create the collector exporter: %v", err)
+	}
+	return exp
+}

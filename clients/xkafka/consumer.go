@@ -20,26 +20,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/observability/metrics"
-	tracer "github.com/NetEase-Media/easy-ngo/observability/tracing"
+	"github.com/IBM/sarama"
 	"github.com/NetEase-Media/easy-ngo/xlog"
-	"github.com/Shopify/sarama"
-	"github.com/prometheus/client_golang/prometheus"
-)
-
-const (
-	metricConsumerReadTotalName         = "kafka_consumer_read_total"
-	metricConsumerReadDurationName      = "kafka_consumer_read_duration"
-	metricConsumerReadDurationRangeName = "kafka_consumer_read_duration_range"
-	metricConsumerErrorName             = "kafka_consumer_error"
-)
-
-var (
-	metricConsumerReadTotal         metrics.Counter
-	metricConsumerReadDuration      metrics.Gauge
-	metricConsumerReadDurationRange metrics.Histogram
-	metricConsumerError             metrics.Counter
-	labelValues                     = []string{"host", "topic"}
 )
 
 type ConsumerMessage struct {
@@ -62,19 +44,12 @@ type BatchListener interface {
 // Consumer 是一个group的消费者
 type Consumer struct {
 	client         sarama.ConsumerGroup
-	logger         xlog.Logger
-	opt            Option
+	config         Config
 	ctx            context.Context
 	cancel         func()
 	runChan        chan struct{}
 	listeners      map[string]Listener
 	batchListeners map[string]BatchListener
-	metrics        metrics.Provider
-	tracer         tracer.Provider
-}
-
-func (c *Consumer) Options() Option {
-	return c.opt
 }
 
 func (c *Consumer) AddListener(topic string, listener Listener) {
@@ -109,20 +84,9 @@ func (c *Consumer) Start() {
 	}
 
 	h := &consumerHandler{
-		consumer:     c,
-		ready:        make(chan struct{}),
-		logger:       c.logger,
-		opt:          &c.opt,
-		enable:       c.metrics != nil, // 这里直接使用是否注入过作为依据
-		enableTracer: c.opt.EnableTracer,
-	}
-
-	if h.enable {
-		metricConsumerReadTotal = c.metrics.NewCounter(metricConsumerReadTotalName, labelValues...)
-		metricConsumerReadDuration = c.metrics.NewGauge(metricConsumerReadDurationName, labelValues...)
-		bukets := prometheus.ExponentialBuckets(0.001, 10, 5)
-		metricConsumerReadDurationRange = c.metrics.NewHistogram(metricConsumerReadDurationRangeName, bukets, labelValues...)
-		metricConsumerError = c.metrics.NewCounter(metricConsumerErrorName, labelValues...)
+		consumer: c,
+		ready:    make(chan struct{}),
+		config:   &c.config,
 	}
 
 	c.ctx, c.cancel = context.WithCancel(context.Background())
@@ -145,7 +109,7 @@ func (c *Consumer) Start() {
 		for {
 			// 当服务的rebalance后会返回
 			if err := c.client.Consume(c.ctx, topics, h); err != nil {
-				c.logger.Errorf("kafka consume failed: %s", err.Error())
+				xlog.Errorf("kafka consume failed: %s", err.Error())
 				time.Sleep(time.Millisecond * 200) // 睡眠防止异常之后死循环占满CPU
 			}
 
@@ -161,7 +125,7 @@ func (c *Consumer) Start() {
 		}
 	}()
 	<-h.ready
-	c.logger.Infof("consumer up and running")
+	xlog.Infof("consumer up and running")
 }
 
 // Stop 停止后台消费任务
@@ -173,27 +137,24 @@ func (c *Consumer) Stop() error {
 	return c.client.Close()
 }
 
-func NewConsumer(opt *Option, logger xlog.Logger, metrics metrics.Provider, tracer tracer.Provider) (*Consumer, error) {
-	config, err := newConsumerConfig(opt)
+func NewConsumer(conf *Config) (*Consumer, error) {
+	config, err := newConsumerConfig(conf)
 	if err != nil {
 		return nil, err
 	}
-	c, err := sarama.NewConsumerGroup(opt.Addr, opt.Consumer.Group, config)
+	c, err := sarama.NewConsumerGroup(conf.Addr, conf.Consumer.Group, config)
 	if err != nil {
 		return nil, err
 	}
 	return &Consumer{
 		client:         c,
-		opt:            *opt,
+		config:         *conf,
 		listeners:      make(map[string]Listener, 8),
 		batchListeners: make(map[string]BatchListener, 8),
-		logger:         logger,
-		metrics:        metrics,
-		tracer:         tracer,
 	}, nil
 }
 
-func newConsumerConfig(opt *Option) (*sarama.Config, error) {
+func newConsumerConfig(opt *Config) (*sarama.Config, error) {
 	config := sarama.NewConfig()
 	version, err := sarama.ParseKafkaVersion(opt.Version)
 	if err != nil {
@@ -234,8 +195,7 @@ func newConsumerConfig(opt *Option) (*sarama.Config, error) {
 type consumerHandler struct {
 	consumer     *Consumer
 	ready        chan struct{}
-	logger       xlog.Logger
-	opt          *Option
+	config       *Config
 	enable       bool
 	enableTracer bool
 }
@@ -254,17 +214,7 @@ func (ch *consumerHandler) Cleanup(sarama.ConsumerGroupSession) error {
 // ConsumeClaim 在循环中消费message
 func (ch *consumerHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	topic := claim.Topic()
-	//
-	if listener := ch.consumer.listeners[topic]; listener != nil {
-		for message := range claim.Messages() {
-			ch.trace(message, func() {
-				ch.logger.Debugf("Message claimed: value = %s, timestamp = %v, topic = %s",
-					message.Value, message.Timestamp, message.Topic,
-				)
-				ch.listen(listener, session, message)
-			})
-		}
-	} else if batchListener := ch.consumer.batchListeners[topic]; batchListener != nil {
+	if batchListener := ch.consumer.batchListeners[topic]; batchListener != nil {
 		count := batchListener.BatchCount()
 		if count < 1 {
 			count = 1
@@ -276,7 +226,7 @@ func (ch *consumerHandler) ConsumeClaim(session sarama.ConsumerGroupSession, cla
 			select {
 			case message := <-claim.Messages():
 				if message == nil {
-					ch.logger.Infof("channel is closed")
+					xlog.Infof("channel is closed")
 					return nil
 				}
 				msgArr = append(msgArr, message)
@@ -293,12 +243,6 @@ func (ch *consumerHandler) ConsumeClaim(session sarama.ConsumerGroupSession, cla
 		}
 	}
 	return nil
-}
-
-func (ch *consumerHandler) trace(message *sarama.ConsumerMessage, fn func()) {
-	span := traceConsumeBefore(message)
-	defer traceConsumeAfter(span, nil)
-	fn()
 }
 
 func (ch *consumerHandler) listen(listener Listener, session sarama.ConsumerGroupSession, message *sarama.ConsumerMessage) {
@@ -326,14 +270,14 @@ func (ch *consumerHandler) listen(listener Listener, session sarama.ConsumerGrou
 		}
 		if err != nil {
 			json, _ := json.Marshal(&msg)
-			ch.logger.Errorf("consumer handle error: %v, message: %s", err, json)
+			xlog.Errorf("consumer handle error: %v, message: %s", err, json)
 		}
 		ch.collect(message.Topic, message.Partition, len(message.Value), time.Since(begin), err)
 	}()
 
 	listener.Listen(msg, ack)
 	// if auto commit, mark message
-	if ch.consumer.opt.Consumer.EnableAutoCommit {
+	if ch.consumer.config.Consumer.EnableAutoCommit {
 		session.MarkMessage(message, "")
 	}
 }
@@ -353,7 +297,7 @@ func (ch *consumerHandler) batchListen(listener BatchListener, session sarama.Co
 			err = fmt.Errorf("unexpected panic value: %#v", r)
 		}
 		if err != nil {
-			ch.logger.Errorf("batch consumer handle error: %v", err)
+			xlog.Errorf("batch consumer handle error: %v", err)
 		}
 		ch.collect(topic, partition, msgBytes, time.Since(begin), err)
 	}()
@@ -376,7 +320,7 @@ func (ch *consumerHandler) batchListen(listener BatchListener, session sarama.Co
 	listener.Listen(msgs, ack)
 
 	// if auto commit, mark message
-	if ch.consumer.opt.Consumer.EnableAutoCommit {
+	if ch.consumer.config.Consumer.EnableAutoCommit {
 		session.MarkMessage(msgArr[len(msgArr)-1], "")
 	}
 }
@@ -398,13 +342,6 @@ func (ch *consumerHandler) collect(topic string, partition int32, msgBytes int, 
 	if !ch.enable {
 		return
 	}
-
-	metricConsumerReadTotal.With("host", ch.opt.Addr[0], "topic", topic).Add(1)
-	metricConsumerReadDuration.With("host", ch.opt.Addr[0], "topic", topic).Set(float64(cost) / 1e6)
-	metricConsumerReadDurationRange.With("host", ch.opt.Addr[0], "topic", topic).Observe(float64(cost) / 1e6)
-	if err != nil {
-		metricConsumerError.With("host", ch.opt.Addr[0], "topic", topic).Add(1)
-	}
 }
 
 type Acknowledgment struct {
@@ -414,7 +351,7 @@ type Acknowledgment struct {
 }
 
 func (a *Acknowledgment) Acknowledge() {
-	if !a.ch.consumer.opt.Consumer.EnableAutoCommit {
+	if !a.ch.consumer.config.Consumer.EnableAutoCommit {
 		a.session.MarkMessage(a.message, "")
 		a.session.Commit()
 	}

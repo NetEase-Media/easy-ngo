@@ -21,7 +21,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/NetEase-Media/easy-ngo/xlog/xfmt"
 	"github.com/go-redis/redis/v8"
 
 	"github.com/alicebob/miniredis"
@@ -114,21 +113,21 @@ func do(commandFn func(Redis)) {
 		s2.Close()
 		s3.Close()
 	}()
-	opt1 := &Option{
+	opt1 := &Config{
 		Name: fmt.Sprintf("test client %d", 1),
 		Addr: []string{s1.Addr()},
 	}
-	rc1 := NewClient(opt1, &xfmt.XFmt{}, nil, nil)
-	opt2 := &Option{
+	rc1 := NewClient(opt1)
+	opt2 := &Config{
 		Name: fmt.Sprintf("test client %d", 2),
 		Addr: []string{s2.Addr()},
 	}
-	rc2 := NewClient(opt2, &xfmt.XFmt{}, nil, nil)
-	opt3 := &Option{
+	rc2 := NewClient(opt2)
+	opt3 := &Config{
 		Name: fmt.Sprintf("test client %d", 3),
 		Addr: []string{s3.Addr()},
 	}
-	rc3 := NewClient(opt3, &xfmt.XFmt{}, nil, nil)
+	rc3 := NewClient(opt3)
 
 	sis := []*ShardInfo{
 		{
