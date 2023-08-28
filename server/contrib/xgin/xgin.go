@@ -29,19 +29,19 @@ import (
 type Server struct {
 	*gin.Engine
 	*http.Server
-	config   *Config
+	config   *server.Config
 	listener net.Listener
 
 	metrics *server.HttpMetrics
 }
 
-func New(config *Config) *Server {
+func New(config *server.Config) *Server {
 	s := &Server{
 		config: config,
 		Engine: gin.New(),
 	}
-	if config.EnabledMetrics {
-		s.metrics = server.NewHttpMetrics(xmetrics.GetProvider(), config.Metrics.Bucket)
+	if config.Metrics.Enabled {
+		s.metrics = server.NewHttpMetrics(xmetrics.GetProvider(), xmetrics.Bucket(config.Metrics.Bucket))
 	}
 	return s
 }
@@ -60,7 +60,7 @@ func (server *Server) Serve() error {
 }
 
 func (s *Server) Init() error {
-	if s.config.EnabledMetrics {
+	if s.config.Metrics.Enabled {
 		s.metrics.Init()
 		s.Use(s.metricsMiddleware())
 	}
@@ -79,10 +79,6 @@ func (s *Server) Init() error {
 
 func (s *Server) metricsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// if xmetrics.GetPath() == c.Request.URL.Path {
-		// 	c.Next()
-		// 	return
-		// }
 		start := time.Now()
 		c.Next()
 		s.metrics.Record(server.HttpLabels{

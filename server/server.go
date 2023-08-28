@@ -24,11 +24,11 @@ type Server interface {
 	Healthz() bool
 	Init() error
 
-	GET(relativePath string, handler any)
-	POST(relativePath string, handler any)
-	PUT(relativePath string, handler any)
-	DELETE(relativePath string, handler any)
-	PATCH(relativePath string, handler any)
-	HEAD(relativePath string, handler any)
-	OPTIONS(relativePath string, handler any)
+	// GET(relativePath string, handler any)
+	// POST(relativePath string, handler any)
+	// PUT(relativePath string, handler any)
+	// DELETE(relativePath string, handler any)
+	// PATCH(relativePath string, handler any)
+	// HEAD(relativePath string, handler any)
+	// OPTIONS(relativePath string, handler any)
 }

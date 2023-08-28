@@ -1,7 +1,29 @@
+app:
+  name: xgin
+  version: 1.0.0
+  env: dev
 server:
   port: 8080
-  enabledMetric: true
-  enabledTrace: false
+  metrics:
+    enabled: true
+    bucket:
+      start:
+      factor:
+      count:
+    path:
+      # include and exclude are mutually exclusive
+      include:
+        prefix:
+        - /test
+        regex:
+        - ^/metrics
+      exclude:
+        prefix:
+        - /metrics
+        regex:
+        - ^/metrics
+  tracer:
+    enabled: false
 metrics:
   path: /metrics
   port: 8888
