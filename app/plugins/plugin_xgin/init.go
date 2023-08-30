@@ -5,6 +5,7 @@ import (
 
 	"github.com/NetEase-Media/easy-ngo/app"
 	"github.com/NetEase-Media/easy-ngo/config"
+	"github.com/NetEase-Media/easy-ngo/server"
 	"github.com/NetEase-Media/easy-ngo/server/contrib/xgin"
 )
 
@@ -15,7 +16,7 @@ func init() {
 }
 
 func Initialize(ctx context.Context) error {
-	c := xgin.DefaultConfig()
+	c := server.DefaultConfig()
 	if err := config.UnmarshalKey("server", c); err != nil {
 		return err
 	}
