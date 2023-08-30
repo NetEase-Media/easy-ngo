@@ -1,6 +1,7 @@
 package config
 
 import (
+	"path"
 	"strings"
 	"time"
 
@@ -24,12 +25,10 @@ func New() Config {
 
 func (xviper *XViper) Init(protocols ...string) error {
 	for _, protocol := range protocols {
-		var scheme string
-		if strings.Index(protocol, "://") == -1 {
-			scheme = "file://"
-		} else {
-			scheme = protocol[:strings.Index(protocol, "://")]
+		if !strings.Contains(protocol, "://") {
+			protocol = FileConfigSourceName + "://" + "path=" + path.Dir(protocol) + ";" + "name=" + path.Base(protocol) + ";" + "type=" + path.Ext(protocol)[1:]
 		}
+		scheme := protocol[:strings.Index(protocol, "://")]
 		switch scheme {
 		case EnvConfigSourceName:
 			xviper.initEnv(protocol[strings.Index(protocol, "://")+3:])

@@ -7,9 +7,9 @@ server:
   metrics:
     enabled: true
     bucket:
-      start:
-      factor:
-      count:
+      start: 10
+      factor: 10
+      count: 10
     path:
       # include and exclude are mutually exclusive
       include:
