@@ -64,7 +64,7 @@ func (s *Server) Init() error {
 		s.metrics.Init()
 		s.Use(s.metricsMiddleware())
 	}
-	if s.config.EnabledTracer {
+	if s.config.Tracer.Enabled {
 		s.Use(s.traceMiddleware())
 	}
 	listener, err := net.Listen("tcp", s.Address())

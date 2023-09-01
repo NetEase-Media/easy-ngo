@@ -23,7 +23,19 @@ server:
         regex:
         - ^/metrics
   tracer:
-    enabled: false
+    enabled: true
+    path:
+      # include and exclude are mutually exclusive
+      include:
+        prefix:
+        - /test
+        regex:
+        - ^/metrics
+      exclude:
+        prefix:
+        - /metrics
+        regex:
+        - ^/metrics
 metrics:
   path: /metrics
   port: 8888

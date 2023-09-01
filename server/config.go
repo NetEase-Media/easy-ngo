@@ -9,11 +9,16 @@ const (
 )
 
 type Config struct {
-	Host          string
-	Port          int
-	EnabledTracer bool
-	Mode          MODE
-	Metrics       Metrics
+	Host    string
+	Port    int
+	Mode    MODE
+	Metrics Metrics
+	Tracer  Tracer
+}
+
+type Tracer struct {
+	Enabled bool
+	Path    Path
 }
 
 type Metrics struct {

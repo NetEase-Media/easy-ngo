@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/NetEase-Media/easy-ngo/xlog"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/jaeger"
 	otlp "go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -73,17 +74,21 @@ var SetErrorHandler = otel.SetErrorHandler
 var SetLogger = otel.SetLogger
 var OtelVersion = otel.Version
 
-func New(config *Config) Provider {
+func New(config *Config) (Provider, error) {
 	var exp sdktrace.SpanExporter
+	var err error
 	switch config.ExporterName {
 	case EXPORTER_NAME_JAEGER:
-		exp = newJaegerExporter(config.ExporterEndpoint)
+		exp, err = newJaegerExporter(config.ExporterEndpoint)
 	case EXPORTER_NAME_OLTP:
-		exp = newOtlpExporter(config.ExporterEndpoint)
+		exp, err = newOtlpExporter(config.ExporterEndpoint)
 	default:
-		exp = newStdoutExporter()
+		exp, err = newStdoutExporter()
 	}
-	return NewProvider(config, exp)
+	if err != nil {
+		return nil, err
+	}
+	return NewProvider(config, exp), nil
 }
 
 func NewProvider(config *Config, exp sdktrace.SpanExporter) Provider {
@@ -108,23 +113,25 @@ func WithTextMapPropagator(propagator propagation.TextMapPropagator) {
 	otel.SetTextMapPropagator(propagator)
 }
 
-func newStdoutExporter() sdktrace.SpanExporter {
+func newStdoutExporter() (sdktrace.SpanExporter, error) {
 	exp, err := stdouttrace.New()
 	if err != nil {
-		// xlog.Errorf("failed to initialize stdout trace exporter %v", err)
+		xlog.Errorf("failed to initialize stdout trace exporter %v", err)
+		return nil, err
 	}
-	return exp
+	return exp, nil
 }
 
-func newJaegerExporter(url string) sdktrace.SpanExporter {
+func newJaegerExporter(url string) (sdktrace.SpanExporter, error) {
 	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
 	if err != nil {
-		// xlog.Errorf("failed to initialize jaeger trace exporter %v", err)
+		xlog.Errorf("failed to initialize jaeger trace exporter %v", err)
+		return nil, err
 	}
-	return exp
+	return exp, nil
 }
 
-func newOtlpExporter(url string) sdktrace.SpanExporter {
+func newOtlpExporter(url string) (sdktrace.SpanExporter, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	conn, err := grpc.DialContext(ctx, url,
@@ -132,11 +139,13 @@ func newOtlpExporter(url string) sdktrace.SpanExporter {
 		grpc.WithBlock(),
 	)
 	if err != nil {
-		// xlog.Errorf("failed to create gRPC connection to collector: %v", err)
+		xlog.Errorf("failed to create gRPC connection to collector: %v", err)
+		return nil, err
 	}
 	exp, err := otlp.New(ctx, otlp.WithGRPCConn(conn))
 	if err != nil {
-		// xlog.Errorf("failed to create the collector exporter: %v", err)
+		xlog.Errorf("failed to create the collector exporter: %v", err)
+		return nil, err
 	}
-	return exp
+	return exp, nil
 }

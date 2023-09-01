@@ -8,6 +8,7 @@ import (
 
 	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/NetEase-Media/easy-ngo/xmetrics"
+	"github.com/NetEase-Media/easy-ngo/xtracer"
 
 	"github.com/NetEase-Media/easy-ngo/config"
 	"github.com/NetEase-Media/easy-ngo/signals"
@@ -166,12 +167,15 @@ func (app *App) Shutdown() (err error) {
 }
 
 func (app *App) initTracer() error {
-	// tracerConfig := xtracer.DefaultConfig()
-	// if err := conf.UnmarshalKey("tracer", tracerConfig); err != nil {
-	// 	return err
-	// }
-	// provider := xtracer.New(tracerConfig)
-	// xtracer.WithVendor(provider)
+	tracerConfig := xtracer.DefaultConfig()
+	if err := config.UnmarshalKey("tracer", tracerConfig); err != nil {
+		return err
+	}
+	provider, err := xtracer.New(tracerConfig)
+	if err != nil {
+		return err
+	}
+	xtracer.WithVendor(provider)
 	return nil
 }
 
