@@ -36,8 +36,6 @@ type App struct {
 	status Status
 	//保证初始化只执行一次
 	initOnce sync.Once
-	//保证启动只执行一次
-	startOnce sync.Once
 	//保证停止只执行一次
 	stopOnce sync.Once
 
@@ -97,32 +95,29 @@ func (app *App) Init(fns ...func() error) error {
 	return err
 }
 
-func (app *App) Start(fns ...func() error) error {
-	var err error
-	app.startOnce.Do(func() {
-		//如果App状态为Unkonwn，说明没有执行过Init，需要先执行Init
-		if app.status == Unkonwn {
-			if err = app.Init(fns...); err != nil {
-				return
-			}
-		}
-		app.status = Starting
-		app.cycle.Run(app.startPlugins)
-		app.waitSignals()
-		app.status = Running
-		xlog.Infof("easy-ngo start success!")
-		if err := <-app.cycle.Wait(); err != nil {
-			xlog.Errorf("easy-ngo shutdown with error[%s]", err.Error())
-			return
-		}
-		xlog.Infof("shutdown easy-ngo!")
-	})
-	return err
+func (app *App) Start() error {
+	app.smu.Lock()
+	defer app.smu.Unlock()
+	if app.status == Unkonwn {
+		return fmt.Errorf("app not init，Please exec Init first")
+	}
+	if app.status == Running {
+		return fmt.Errorf("app is running")
+	}
+	app.status = Starting
+	app.cycle.Run(app.startPlugins)
+	app.waitSignals()
+	app.status = Running
+	xlog.Infof("easy-ngo start success!")
+	if err := <-app.cycle.Wait(); err != nil {
+		xlog.Errorf("easy-ngo shutdown with error[%s]", err.Error())
+		return err
+	}
+	xlog.Infof("shutdown easy-ngo!")
+	return nil
 }
 
 func (app *App) startPlugins() error {
-	app.smu.Lock()
-	defer app.smu.Unlock()
 	var eg errgroup.Group
 	var ctx, cancel = context.WithTimeout(context.Background(), 3*time.Second)
 	go func() {
@@ -171,11 +166,10 @@ func (app *App) initTracer() error {
 	if err := config.UnmarshalKey("tracer", tracerConfig); err != nil {
 		return err
 	}
-	provider, err := xtracer.New(tracerConfig)
+	_, err := xtracer.New(tracerConfig)
 	if err != nil {
 		return err
 	}
-	xtracer.WithVendor(provider)
 	return nil
 }
 

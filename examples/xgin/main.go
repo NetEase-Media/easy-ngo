@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/NetEase-Media/easy-ngo/app"
 	"github.com/gin-gonic/gin"
 
@@ -11,8 +9,8 @@ import (
 
 func main() {
 	app := app.New()
-	err := app.Start(addRoutes)
-	fmt.Println(err)
+	app.Init(addRoutes)
+	app.Start()
 }
 
 func addRoutes() error {

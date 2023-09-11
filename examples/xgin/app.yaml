@@ -23,7 +23,6 @@ server:
         regex:
         - ^/metrics
   tracer:
-    enabled: true
     path:
       # include and exclude are mutually exclusive
       include:
@@ -44,3 +43,5 @@ logger:
 tracer:
   enabled: true
   samplingRate: 1.0
+  exporterName: stdout
+  serviceName: xgin-demo

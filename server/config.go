@@ -17,8 +17,7 @@ type Config struct {
 }
 
 type Tracer struct {
-	Enabled bool
-	Path    Path
+	Path Path
 }
 
 type Metrics struct {
@@ -54,7 +53,6 @@ func DefaultConfig() *Config {
 		Metrics: Metrics{
 			Enabled: false,
 		},
-		EnabledTracer: false,
-		Mode:          DEBUG,
+		Mode: DEBUG,
 	}
 }

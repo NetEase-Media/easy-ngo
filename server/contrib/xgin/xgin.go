@@ -64,9 +64,9 @@ func (s *Server) Init() error {
 		s.metrics.Init()
 		s.Use(s.metricsMiddleware())
 	}
-	if s.config.Tracer.Enabled {
-		s.Use(s.traceMiddleware())
-	}
+	//初始化Tracer
+	s.initTracer()
+	s.Use(s.traceMiddleware())
 	listener, err := net.Listen("tcp", s.Address())
 	if err != nil {
 		xlog.Panicf("gin Init error![%s]", err)
