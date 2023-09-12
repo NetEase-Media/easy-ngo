@@ -41,7 +41,6 @@ type RecordMetadata struct {
 type Producer struct {
 	client  sarama.AsyncProducer
 	config  Config
-	logger  xlog.Logger
 	runChan chan struct{}
 	wg      sync.WaitGroup
 }
@@ -148,7 +147,7 @@ func (p *Producer) receiveError() {
 
 // handle 处理异步消息的发送结果
 func (p *Producer) handle(msg *sarama.ProducerMessage, err error) {
-	p.logger.Debugf("receive send response %+v, error %v", msg, err)
+	xlog.Debugf("receive send response %+v, error %v", msg, err)
 	meta := msg.Metadata.(*metaData)
 	if meta.resChan != nil {
 		meta.resChan <- err

@@ -2,7 +2,9 @@ package pluginxkafka
 
 import (
 	"context"
+	"errors"
 
+	"github.com/IBM/sarama"
 	"github.com/NetEase-Media/easy-ngo/app"
 	"github.com/NetEase-Media/easy-ngo/clients/xkafka"
 	"github.com/NetEase-Media/easy-ngo/config"
@@ -19,13 +21,14 @@ func init() {
 
 func Initialize(ctx context.Context) error {
 	configs := make([]xkafka.Config, 0)
-	if err := config.UnmarshalKey("kafka", configs); err != nil {
+	if err := config.UnmarshalKey("kafka", &configs); err != nil {
 		return err
 	}
 	if len(configs) == 0 {
-		configs = append(configs, *xkafka.DefaultConfig())
+		return errors.New("kafka config is empty")
 	}
 	for _, opt := range configs {
+		opt.Consumer.InitialOffset = sarama.OffsetNewest
 		cli, err := xkafka.New(&opt)
 		if err != nil {
 			panic("init kafka failed." + err.Error())
