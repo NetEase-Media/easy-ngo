@@ -9,19 +9,5 @@ kafka:
   addr:
   - 10.196.2.245:9092
   version: 2.8.1
-  maxOpenRequests: 100
-  dialTimeout: 10s
-  readTimeout: 10s
-  writeTimeout: 10s 
   consumer:
     group: test
-    enableAutoCommit: true
-    autoCommitInterval: 1s
-    sessionTimeout: 10s
-    minFetchBytes: 1
-    defaultFetchBytes: 1048576
-    maxFetchBytes: 0
-    maxFetchWait: 250ms
-    retries: 3
-  producer:
-    timeout: 10s

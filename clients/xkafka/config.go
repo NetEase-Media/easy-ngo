@@ -61,11 +61,11 @@ func DefaultConfig() *Config {
 	opt := &Config{}
 	opt.Version = defaultVersion
 	opt.MaxOpenRequests = 5
-	opt.DialTimeout = time.Second * 30
-	opt.ReadTimeout = time.Second * 30
-	opt.WriteTimeout = time.Second * 30
+	opt.DialTimeout = time.Second * 10
+	opt.ReadTimeout = time.Second * 10
+	opt.WriteTimeout = time.Second * 10
 	opt.Metadata.Retries = 3
-	opt.Metadata.Timeout = time.Second * 60
+	opt.Metadata.Timeout = time.Second * 10
 	opt.Consumer.Group = ""
 	opt.Consumer.EnableAutoCommit = true
 	opt.Consumer.AutoCommitInterval = time.Second * 1

@@ -6,8 +6,9 @@ import (
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/app"
-	pkafka "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xkafka"
 	"github.com/NetEase-Media/easy-ngo/clients/xkafka"
+
+	pkafka "github.com/NetEase-Media/easy-ngo/app/plugins/plugin_xkafka"
 )
 
 const topic = "test"
@@ -38,6 +39,7 @@ func main() {
 		}
 	}()
 	time.Sleep(10 * time.Second)
+
 }
 
 type listener struct {

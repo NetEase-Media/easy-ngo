@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	"github.com/IBM/sarama"
 	"github.com/NetEase-Media/easy-ngo/app"
 	"github.com/NetEase-Media/easy-ngo/clients/xkafka"
 	"github.com/NetEase-Media/easy-ngo/config"
+	"github.com/NetEase-Media/easy-ngo/utils/xreflect"
 )
 
 var (
@@ -27,8 +27,9 @@ func Initialize(ctx context.Context) error {
 	if len(configs) == 0 {
 		return errors.New("kafka config is empty")
 	}
+	defConfig := xkafka.DefaultConfig()
 	for _, opt := range configs {
-		opt.Consumer.InitialOffset = sarama.OffsetNewest
+		xreflect.Override(&opt, defConfig)
 		cli, err := xkafka.New(&opt)
 		if err != nil {
 			panic("init kafka failed." + err.Error())
