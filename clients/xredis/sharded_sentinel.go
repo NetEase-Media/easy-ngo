@@ -158,8 +158,8 @@ func sentinelOptions(opt *Config, addr string) *redis.Options {
 	}
 }
 
-func clientOptions(opt *Option, addr string) *Option {
-	return &Option{
+func clientOptions(opt *Config, addr string) *Config {
+	return &Config{
 		Addr:               []string{addr},
 		DB:                 0,
 		Password:           opt.Password,
