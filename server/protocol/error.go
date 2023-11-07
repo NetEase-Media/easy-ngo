@@ -55,7 +55,7 @@ const (
 	PermissionDenied   = 1000108
 	AntiCheating       = 1000109
 	UnsupportClient    = 1000110
-	UnsupportOs        = 1000111
+	UnsupportOS        = 1000111
 	AccountFrozen      = 1000200
 	AccountLock        = 1000201
 	TokenError         = 1000202
@@ -77,7 +77,7 @@ var errorMessages = map[int]string{
 	PermissionDenied:   "权限不足",
 	AntiCheating:       "请求被拦截",
 	UnsupportClient:    "不支持的客户端",
-	UnsupportOs:        "不支持的操作系统",
+	UnsupportOS:        "不支持的操作系统",
 	AccountFrozen:      "账号异常-需打开安全中心申诉",
 	AccountLock:        "账号异常-需打开安全中心解锁",
 	TokenError:         "token校验失败",
