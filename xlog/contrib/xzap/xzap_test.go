@@ -15,14 +15,72 @@
 package xzap
 
 import (
+	"fmt"
+	"os"
 	"testing"
 
 	"github.com/NetEase-Media/easy-ngo/xlog"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestXzap(t *testing.T) {
+const (
+	_path       = "./logs"
+	_error_path = "./logs"
+)
+
+func TestMain(m *testing.M) {
+
+	// init
+	setup()
+
+	m.Run()
+
+	// shutdown
+	teardown()
+}
+
+func clearLogs() error {
+	_, err := os.Stat(_path)
+	if err == nil {
+		err = os.RemoveAll(_path)
+		return err
+	}
+	_, err = os.Stat(_error_path)
+	if err == nil {
+		err = os.RemoveAll(_error_path)
+		return err
+	}
+	return nil
+}
+
+func setup() error {
+	// remove old logs
+	return clearLogs()
+}
+
+func teardown() error {
+	// clean
+	return clearLogs()
+}
+
+func TestXzapInfo(t *testing.T) {
 	c := DefaultConfig()
+	c.Path = _path
 	xzap, _ := New(c)
 	xlog.WithVendor(xzap)
-	xlog.Infof("debug %s", "test")
+	xlog.Infof("info %s", "test")
+	fpath := fmt.Sprintf("%s/%s.%s", c.Path, c.FileName, c.Suffix)
+	_, err := os.Stat(fpath)
+	assert.Nil(t, err, "can not find log file")
+}
+
+func TestXzapError(t *testing.T) {
+	c := DefaultConfig()
+	c.ErrorPath = _error_path
+	xzap, _ := New(c)
+	xlog.WithVendor(xzap)
+	xlog.Errorf("error %s", "test")
+	fpath := fmt.Sprintf("%s/%s.%s", c.ErrorPath, c.FileName, c.ErrorSuffix)
+	_, err := os.Stat(fpath)
+	assert.Nil(t, err, "can not find error log file")
 }
