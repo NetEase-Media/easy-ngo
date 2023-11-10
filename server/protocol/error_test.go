@@ -24,12 +24,10 @@ import (
 )
 
 func TestError(t *testing.T) {
-	var err error
-	err = &Error{
+	var err = &Error{
 		Code: SystemError,
 		Err:  os.ErrClosed,
 	}
-
 	e := &Error{}
 	assert.True(t, errors.As(err, &e))
 	assert.True(t, errors.Is(err, os.ErrClosed))

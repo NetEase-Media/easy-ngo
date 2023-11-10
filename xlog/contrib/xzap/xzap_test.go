@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package test
+package xzap
 
 import (
 	"testing"
 
 	"github.com/NetEase-Media/easy-ngo/xlog"
-	"github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap"
 )
 
 func TestXzap(t *testing.T) {
-	c := xzap.DefaultConfig()
-	xzap, _ := xzap.New(c)
+	c := DefaultConfig()
+	xzap, _ := New(c)
 	xlog.WithVendor(xzap)
 	xlog.Infof("debug %s", "test")
 }
