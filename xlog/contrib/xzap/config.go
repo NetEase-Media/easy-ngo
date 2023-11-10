@@ -19,16 +19,16 @@ type LEVEL string
 
 const (
 	JSON FORMAT = "json"
-	TEXT        = "text"
+	TEXT FORMAT = "text"
 )
 
 const (
 	DEBUG LEVEL = "debug"
-	INFO        = "info"
-	WARN        = "warn"
-	ERROR       = "error"
-	PANIC       = "panic"
-	FATAL       = "fatal"
+	INFO  LEVEL = "info"
+	WARN  LEVEL = "warn"
+	ERROR LEVEL = "error"
+	PANIC LEVEL = "panic"
+	FATAL LEVEL = "fatal"
 )
 
 const (
