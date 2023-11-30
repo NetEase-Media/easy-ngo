@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package test
+package config
 
 import (
 	"os"
 	"testing"
 
-	"github.com/NetEase-Media/easy-ngo/config"
 	"gotest.tools/assert"
 )
 
@@ -32,9 +31,9 @@ func TestXViper(t *testing.T) {
 	os.Setenv("APP_NAME", "easy-ngo")
 	os.Setenv("APP_VERSION", "v1.0.0")
 	os.Setenv("APP_PORT", "8080")
-	c := config.New()
-	c.Init("env://prefix=APP", "file://type=toml;path=./;name=test2")
-	config.WithConfig(c)
+	c := New()
+	c.Init("env://prefix=APP", "file://type=toml;path=./file;name=test2")
+	WithConfig(c)
 	assert.Equal(t, "v1.0.0", "v1.0.0")
 	assert.Equal(t, config.GetString("name"), "easy-ngo")
 	assert.Equal(t, config.GetString("version"), "v1.0.0")
