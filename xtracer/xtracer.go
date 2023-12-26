@@ -16,6 +16,8 @@ package xtracer
 
 import (
 	"context"
+	"io"
+	"os"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -39,6 +41,8 @@ type Tracer = trace.Tracer
 // 第三方实现的Tracer必须实现Provider接口
 type Provider interface {
 	trace.TracerProvider
+	ForceFlush(ctx context.Context) error
+	Shutdown(ctx context.Context) error
 }
 
 // otel/trace 包常量、类型、方法 快捷链接
@@ -95,7 +99,7 @@ func New(config *Config) Provider {
 	case EXPORTER_NAME_OLTP:
 		exp = newOtlpExporter(config.ExporterEndpoint)
 	default:
-		exp = newStdoutExporter()
+		exp = NewStdoutExporter()
 	}
 	return NewProvider(config, exp)
 }
@@ -122,10 +126,24 @@ func WithTextMapPropagator(propagator propagation.TextMapPropagator) {
 	otel.SetTextMapPropagator(propagator)
 }
 
-func newStdoutExporter() sdktrace.SpanExporter {
-	exp, err := stdouttrace.New()
+func NewFileExporter(w io.Writer) sdktrace.SpanExporter {
+	if w == nil {
+		w = os.Stdout
+	}
+	exp, err := stdouttrace.New(
+		stdouttrace.WithPrettyPrint(),
+		stdouttrace.WithWriter(w),
+	)
 	if err != nil {
-		// xlog.Errorf("failed to initialize stdout trace exporter %v", err)
+		panic("failed to initialize file trace exporter")
+	}
+	return exp
+}
+
+func NewStdoutExporter() sdktrace.SpanExporter {
+	exp, err := stdouttrace.New(stdouttrace.WithPrettyPrint())
+	if err != nil {
+		panic("failed to initialize stdout trace exporter")
 	}
 	return exp
 }
@@ -133,7 +151,7 @@ func newStdoutExporter() sdktrace.SpanExporter {
 func newJaegerExporter(url string) sdktrace.SpanExporter {
 	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
 	if err != nil {
-		// xlog.Errorf("failed to initialize jaeger trace exporter %v", err)
+		panic("failed to initialize jaeger trace exporter")
 	}
 	return exp
 }
@@ -146,11 +164,11 @@ func newOtlpExporter(url string) sdktrace.SpanExporter {
 		grpc.WithBlock(),
 	)
 	if err != nil {
-		// xlog.Errorf("failed to create gRPC connection to collector: %v", err)
+		panic("failed to connect to otlp trace exporter")
 	}
 	exp, err := otlp.New(ctx, otlp.WithGRPCConn(conn))
 	if err != nil {
-		// xlog.Errorf("failed to create the collector exporter: %v", err)
+		panic("failed to initialize otlp trace exporter")
 	}
 	return exp
 }
