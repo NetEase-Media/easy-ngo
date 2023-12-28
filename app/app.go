@@ -16,17 +16,18 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
 	"github.com/NetEase-Media/easy-ngo/xlog"
 	"github.com/NetEase-Media/easy-ngo/xmetrics"
+	"github.com/NetEase-Media/easy-ngo/xtracer"
 
 	"github.com/NetEase-Media/easy-ngo/config"
 	"github.com/NetEase-Media/easy-ngo/signals"
 	"github.com/NetEase-Media/easy-ngo/utils"
 	"github.com/NetEase-Media/easy-ngo/utils/xgo"
+	"github.com/NetEase-Media/easy-ngo/xlog/contrib/xstdout"
 	"github.com/NetEase-Media/easy-ngo/xlog/contrib/xzap"
 	"github.com/NetEase-Media/easy-ngo/xmetrics/contrib/xprometheus"
 	"github.com/fatih/color"
@@ -35,12 +36,12 @@ import (
 
 const (
 	Initialize Status = "Initialize"
-	Starting          = "Starting"
-	Running           = "Running"
-	Stopping          = "Stopping"
-	Online            = "Online"
-	Offline           = "Offline"
-	Unkonwn           = "Unkonwn"
+	Starting   Status = "Starting"
+	Running    Status = "Running"
+	Stopping   Status = "Stopping"
+	Online     Status = "Online"
+	Offline    Status = "Offline"
+	Unkonwn    Status = "Unkonwn"
 )
 
 type Status string
@@ -57,6 +58,11 @@ type App struct {
 	cycle   *utils.Cycle
 	smu     *sync.RWMutex
 	stopped chan struct{}
+
+	// if set true, we will init tracer plugin
+	enableTracer bool
+	// if set true, we will init metric plugin
+	enableMetrics bool
 }
 
 func New() *App {
@@ -68,33 +74,47 @@ func New() *App {
 	}
 }
 
+func (app *App) EnableTracer() *App {
+	app.enableTracer = true
+	return app
+}
+
+func (app *App) EnableMetrics() *App {
+	app.enableMetrics = true
+	return app
+}
+
 func (app *App) Init(fns ...func() error) error {
 	var err error
 	app.initOnce.Do(func() {
-		//打印logo
-		app.printBanner()
-		//置app状态为初始化中
+		//init standard output and print logo
+		app.initStdoutAndPrintBanner()
+		//set app status with Initialize
 		app.status = Initialize
 		//初始化命令行参数
 		parse()
 		//初始化配置文件
 		err = app.initConfig()
 		if err != nil {
+			xlog.Errorf("init config error: %v", err.Error())
 			return
 		}
 		//初始化全局日志
 		err = app.initLogger()
 		if err != nil {
+			xlog.Errorf("init logger error: %v", err.Error())
 			return
 		}
 		//初始化Metrics
 		err = app.initMetrics()
 		if err != nil {
+			xlog.Errorf("init metrics error: %v", err.Error())
 			return
 		}
 		//初始化Tracer
 		err = app.initTracer()
 		if err != nil {
+			xlog.Errorf("init tracer error: %v", err.Error())
 			return
 		}
 		//初始化Plugins
@@ -102,6 +122,7 @@ func (app *App) Init(fns ...func() error) error {
 		fs := GetFns(Initialize)
 		for i := range fs {
 			if err := fs[i](ctx); err != nil {
+				xlog.Errorf("init plugins error: %v", err.Error())
 				return
 			}
 		}
@@ -180,16 +201,22 @@ func (app *App) Shutdown() (err error) {
 }
 
 func (app *App) initTracer() error {
-	// tracerConfig := xtracer.DefaultConfig()
-	// if err := conf.UnmarshalKey("tracer", tracerConfig); err != nil {
-	// 	return err
-	// }
-	// provider := xtracer.New(tracerConfig)
-	// xtracer.WithVendor(provider)
+	if !app.enableTracer {
+		return nil
+	}
+	tracerConfig := xtracer.DefaultConfig()
+	if err := config.UnmarshalKey("tracer", tracerConfig); err != nil {
+		return err
+	}
+	provider := xtracer.New(tracerConfig)
+	xtracer.WithVendor(provider)
 	return nil
 }
 
 func (app *App) initMetrics() error {
+	if !app.enableMetrics {
+		return nil
+	}
 	metricsConfig := xprometheus.DefaultConfig()
 	if err := config.UnmarshalKey("metrics", metricsConfig); err != nil {
 		return err
@@ -201,16 +228,22 @@ func (app *App) initMetrics() error {
 	return nil
 }
 
-func (app *App) initLogger() error {
-	logConfig := xzap.DefaultConfig()
-	if err := config.UnmarshalKey("logger", logConfig); err != nil {
+func (app *App) initLogger() (err error) {
+	if !config.Exists("logger") {
+		return nil
+	}
+	var logConfig *xzap.Config = xzap.DefaultConfig()
+	if err = config.UnmarshalKey("logger", logConfig); err != nil {
 		return err
 	}
-	xzap, err := xzap.New(logConfig)
+	if logConfig == nil {
+		return nil
+	}
+	logger, err := xzap.New(logConfig)
 	if err != nil {
 		return err
 	}
-	xlog.WithVendor(xzap)
+	xlog.WithVendor(logger)
 	return nil
 }
 
@@ -223,7 +256,9 @@ func (app *App) initConfig() error {
 	return nil
 }
 
-func (app *App) printBanner() {
+func (app *App) initStdoutAndPrintBanner() {
+	var logger xlog.Logger = xstdout.New()
+	xlog.WithVendor(logger)
 
 	const banner = `
 	######   ##    ####  #   #       #    #  ####   ####  
@@ -235,5 +270,5 @@ func (app *App) printBanner() {
 
  Welcome to easy-ngo, starting application ...
 `
-	fmt.Println(color.GreenString(banner))
+	xlog.Infof(color.GreenString(banner))
 }

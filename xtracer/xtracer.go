@@ -58,38 +58,44 @@ const (
 )
 
 // otel/trace interface
-type Span = trace.Span
-type SpanContext = trace.SpanContext
+type (
+	Span        = trace.Span
+	SpanContext = trace.SpanContext
+)
 
 // otel/trace  funcs
-var ContextWithRemoteSpanContext = trace.ContextWithRemoteSpanContext
-var ContextWithSpan = trace.ContextWithSpan
-var ContextWithSpanContext = trace.ContextWithSpanContext
-var LinkFromContext = trace.LinkFromContext
-var WithSpanKind = trace.WithSpanKind
-var WithAttributes = trace.WithAttributes
-var SpanFromContext = trace.SpanFromContext
-var SpanContextFromContext = trace.SpanContextFromContext
+var (
+	ContextWithRemoteSpanContext = trace.ContextWithRemoteSpanContext
+	ContextWithSpan              = trace.ContextWithSpan
+	ContextWithSpanContext       = trace.ContextWithSpanContext
+	LinkFromContext              = trace.LinkFromContext
+	WithSpanKind                 = trace.WithSpanKind
+	WithAttributes               = trace.WithAttributes
+	SpanFromContext              = trace.SpanFromContext
+	SpanContextFromContext       = trace.SpanContextFromContext
+)
 
 // otel包 常量、类型、方法 快捷链接
 
 // otel types
-type ErrorHandler = otel.ErrorHandler
-type ErrorHandlerFunc = otel.ErrorHandlerFunc
-
-// 注意此函数改名
-var GetTracer = otel.Tracer
+type (
+	ErrorHandler     = otel.ErrorHandler
+	ErrorHandlerFunc = otel.ErrorHandlerFunc
+)
 
 // otel funcs
-var GetTracerProvider = otel.GetTracerProvider
-var SetTracerProvider = otel.SetTracerProvider
-var GetTextMapPropagator = otel.GetTextMapPropagator
-var SetTextMapPropagator = otel.SetTextMapPropagator
-var Handle = otel.Handle
-var GetErrorHandler = otel.GetErrorHandler
-var SetErrorHandler = otel.SetErrorHandler
-var SetLogger = otel.SetLogger
-var OtelVersion = otel.Version
+var (
+	GetTracer            = otel.Tracer // 注意此函数改名
+	GetTracerProvider    = otel.GetTracerProvider
+	SetTracerProvider    = otel.SetTracerProvider
+	GetTextMapPropagator = otel.GetTextMapPropagator
+	SetTextMapPropagator = otel.SetTextMapPropagator
+	Handle               = otel.Handle
+	GetErrorHandler      = otel.GetErrorHandler
+	SetErrorHandler      = otel.SetErrorHandler
+	SetLogger            = otel.SetLogger
+	OtelVersion          = otel.Version
+)
 
 func New(config *Config) Provider {
 	var exp sdktrace.SpanExporter
@@ -171,4 +177,8 @@ func newOtlpExporter(url string) sdktrace.SpanExporter {
 		panic("failed to initialize otlp trace exporter")
 	}
 	return exp
+}
+
+func WithVendor(provider Provider) {
+	otel.SetTracerProvider(provider)
 }

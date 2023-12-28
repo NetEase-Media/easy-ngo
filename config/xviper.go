@@ -78,6 +78,10 @@ func (xviper *XViper) initFile(protocol string) error {
 	return xviper.viper.ReadInConfig()
 }
 
+func (xviper *XViper) Get(key string) interface{} {
+	return xviper.viper.Get(key)
+}
+
 func (xviper *XViper) GetString(key string) string {
 	return xviper.viper.GetString(key)
 }

@@ -17,6 +17,7 @@ package config
 import "time"
 
 type Config interface {
+	Get(key string) interface{}
 	GetString(key string) string
 	GetInt(key string) int
 	GetBool(key string) bool

@@ -20,6 +20,14 @@ import (
 
 var config Config
 
+func Exists(key string) bool {
+	return Get(key) != nil
+}
+
+func Get(key string) interface{} {
+	return config.Get(key)
+}
+
 func GetString(key string) string {
 	return config.GetString(key)
 }
