@@ -46,6 +46,14 @@ const (
 
 type Status string
 
+type BaseConfigKey string
+
+const (
+	LoggerConfigKey  BaseConfigKey = "logger"
+	TracerConfigKey  BaseConfigKey = "tracer"
+	MetricsConfigKey BaseConfigKey = "metrics"
+)
+
 type App struct {
 	status Status
 	//保证初始化只执行一次
@@ -205,7 +213,7 @@ func (app *App) initTracer() error {
 		return nil
 	}
 	tracerConfig := xtracer.DefaultConfig()
-	if err := config.UnmarshalKey("tracer", tracerConfig); err != nil {
+	if err := config.UnmarshalKey(string(TracerConfigKey), tracerConfig); err != nil {
 		return err
 	}
 	provider := xtracer.New(tracerConfig)
@@ -218,7 +226,7 @@ func (app *App) initMetrics() error {
 		return nil
 	}
 	metricsConfig := xprometheus.DefaultConfig()
-	if err := config.UnmarshalKey("metrics", metricsConfig); err != nil {
+	if err := config.UnmarshalKey(string(MetricsConfigKey), metricsConfig); err != nil {
 		return err
 	}
 	provider := xprometheus.NewProvider(metricsConfig)
@@ -229,11 +237,11 @@ func (app *App) initMetrics() error {
 }
 
 func (app *App) initLogger() (err error) {
-	if !config.Exists("logger") {
+	if !config.Exists(string(LoggerConfigKey)) {
 		return nil
 	}
 	var logConfig *xzap.Config = xzap.DefaultConfig()
-	if err = config.UnmarshalKey("logger", logConfig); err != nil {
+	if err = config.UnmarshalKey(string(LoggerConfigKey), logConfig); err != nil {
 		return err
 	}
 	if logConfig == nil {
